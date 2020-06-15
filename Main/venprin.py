@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-import ven2
+import Viajes
 import Servicios
 import Pagos
 import Clientes
@@ -132,7 +132,7 @@ class Ui_Page2(object):
         icon2.addPixmap(QtGui.QPixmap("Img/libro.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionVIAJES.setIcon(icon2)
         self.actionVIAJES.setObjectName("actionVIAJES")
-        self.actionVIAJES.triggered.connect(lambda: self.openwindow(ven2.Ui_Page3()))
+        self.actionVIAJES.triggered.connect(lambda: self.openwindow(Viajes.Viajes()))
 
         #-----Opcion Pagos---#
         self.actionPAGOS = QtWidgets.QAction(Form)

@@ -1,4 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QTableWidget ,QTableWidgetItem,QErrorMessage, QMessageBox
+import cx_Oracle
 
 class Empleados(object):
 
@@ -38,6 +40,37 @@ class Empleados(object):
         #Filas de la tabla (BD)
         self.tableWidget.setRowCount(0)
 
+        # Titulo a cada celda
+        self.tableWidget.setItem(0,0,QTableWidgetItem("NOMBRE"))
+        self.tableWidget.setItem(0,1,QTableWidgetItem("APELLIDO"))
+        self.tableWidget.setItem(0,2,QTableWidgetItem("APELLIDO"))
+        self.tableWidget.setItem(0,3,QTableWidgetItem("TELEFONO"))
+        self.tableWidget.setItem(0,4,QTableWidgetItem("CORREO"))
+        self.tableWidget.setItem(0,5,QTableWidgetItem("# SEGURO"))
+        self.tableWidget.setItem(0,6,QTableWidgetItem("DIRECCION"))
+
+
+
+
+        #consulta BD srvicio
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        cursor=conecion.cursor()
+
+
+        consulta= ('SELECT NOMBRE , APE_PAT ,APE_MAT ,TELEFONO,CORREO,NO_SEG FROM EMPLEADO JOIN CORREO USING (ID_COR)')
+        datos=cursor.execute(consulta).fetchall()
+        
+        #ciclo para recorrer tabla BD
+        if len (datos) >0:
+            fila =1
+            for p in datos:
+                columna=1
+                for c in p:
+                    celda=QTableWidgetItem(str(c))
+                    self.tableWidget.setItem(fila,columna,celda)
+                    columna +=1
+                    fila +=1
+
         #--------------------------------------------Boton Insertar-----------------------------------------------------#
 
         #Atributos del botn 
@@ -71,12 +104,7 @@ class Empleados(object):
         self.pushButton_4.setGeometry(QtCore.QRect(590, 10, 113, 32))
         self.pushButton_4.setObjectName("pushButton_4")
 
-        #--------------------------------------------  Boton Regresar  -----------------------------------------------------#
-
-        
-        self.btn_back = QtWidgets.QPushButton(Form)
-        self.btn_back.setGeometry(QtCore.QRect(100, 100, 113, 32))
-        self.btn_back.setObjectName("btn_back")
+     
 
         #-----------------------------------------------  Textos  ----------------------------------------------------------#
 
@@ -101,12 +129,7 @@ class Empleados(object):
         Page2.setWindowTitle(_translate("Page2", "Empleados"))
 
 
-        #----------------------------------------------------Experimento--------------------------------------------------------------------------#
-        
-
-        #----------------------------------------------------FIN Experimento--------------------------------------------------------------------------#
-       
-        self.btn_back.clicked.connect(self.button_handler_back)
+  
 
     #-------------------------------------------- Funcion Boton Regresar-----------------------------------------------------#
 

@@ -25,21 +25,33 @@ class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(734, 428)
+
+        #Texto Usuario
         self.label_username = QtWidgets.QLabel(Form)
         self.label_username.setGeometry(QtCore.QRect(160, 130, 121, 31))
         self.label_username.setObjectName("label_username")
+
+        #Texto Password
         self.label_password = QtWidgets.QLabel(Form)
         self.label_password.setGeometry(QtCore.QRect(160, 190, 111, 21))
         self.label_password.setObjectName("label_password")
+
+        #usario
         self.txt_input_username = QtWidgets.QLineEdit(Form)
         self.txt_input_username.setGeometry(QtCore.QRect(380, 140, 201, 21))
         self.txt_input_username.setObjectName("txt_input_username")
+        
+        #Password
         self.txt_input_password = QtWidgets.QLineEdit(Form)
         self.txt_input_password.setGeometry(QtCore.QRect(380, 190, 201, 21))
         self.txt_input_password.setObjectName("txt_input_password")
+
+        #Boton Ingresar
         self.btn_submit = QtWidgets.QPushButton(Form)
         self.btn_submit.setGeometry(QtCore.QRect(380, 240, 211, 32))
         self.btn_submit.setObjectName("btn_submit")
+
+
         self.text_title = QtWidgets.QTextEdit(Form)
         self.text_title.setGeometry(QtCore.QRect(60, 10, 629, 51))
         self.text_title.setObjectName("text_title")
@@ -75,13 +87,6 @@ class Ui_Form(object):
 
             self.openwindow()
 
-            #Page2.show()
-            #self.ui.btn_sumbit.clicked.connect(lambda : self.ui.stackedWidget.setCurrentIndex(0))
-
-#------------------------------------------------------------  VENTANA 2 -----------------------------------------------------------------------#
-
-
-#------------------------------------------------------------  VENTANA 3-----------------------------------------------------------------------#
 
 
 

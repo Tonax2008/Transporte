@@ -1,4 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QTableWidget ,QTableWidgetItem,QErrorMessage, QMessageBox
+import cx_Oracle
 
 class Pagos(object):
 
@@ -38,6 +40,35 @@ class Pagos(object):
         #Filas de la tabla (BD)
         self.tableWidget.setRowCount(0)
 
+
+
+        # Titulo a cada celda
+        self.tableWidget.setItem(0,0,QTableWidgetItem("ID_PAGO"))
+        self.tableWidget.setItem(0,1,QTableWidgetItem("CLIENTE"))
+        self.tableWidget.setItem(0,2,QTableWidgetItem("METODO"))
+        self.tableWidget.setItem(0,3,QTableWidgetItem("FECHA"))
+        
+        
+        #consulta BD srvicio
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        cursor=conecion.cursor()
+
+        consulta= ('SELECT ID_Pago ,RAZ_SOC,METODO,FECHA FROM PAGO  JOIN CLIENTE USING (ID_CLI) JOIN METODO_PAGO USING (ID_MET) ')
+        datos=cursor.execute(consulta).fetchall()
+        
+        #ciclo para recorrer tabla BD
+        if len (datos) >0:
+            fila =1
+            for p in datos:
+                columna=1
+                for c in p:
+                    celda=QTableWidgetItem(str(c))
+                    self.tableWidget.setItem(fila,columna,celda)
+                    columna +=1
+                    fila +=1
+
+
+
         #--------------------------------------------Boton Insertar-----------------------------------------------------#
 
         #Atributos del botn 
@@ -73,10 +104,7 @@ class Pagos(object):
 
         #--------------------------------------------  Boton Regresar  -----------------------------------------------------#
 
-        
-        self.btn_back = QtWidgets.QPushButton(Form)
-        self.btn_back.setGeometry(QtCore.QRect(100, 100, 113, 32))
-        self.btn_back.setObjectName("btn_back")
+    
 
         #-----------------------------------------------  Textos  ----------------------------------------------------------#
 
@@ -101,12 +129,7 @@ class Pagos(object):
         Page2.setWindowTitle(_translate("Page2", "Pagos"))
 
 
-        #----------------------------------------------------Experimento--------------------------------------------------------------------------#
-        
 
-        #----------------------------------------------------FIN Experimento--------------------------------------------------------------------------#
-       
-        self.btn_back.clicked.connect(self.button_handler_back)
 
     #-------------------------------------------- Funcion Boton Regresar-----------------------------------------------------#
 

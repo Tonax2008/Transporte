@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QTableWidget ,QTableWidgetItem,QErrorMessage, QMessageBox
 import cx_Oracle
-class Clientes(object):
+class Viajes(object):
 
     #-------------------------------------------- Funcion MOVER entre Pantallas -----------------------------------------------------#
 
@@ -40,17 +40,18 @@ class Clientes(object):
         self.tableWidget.setRowCount(0)
 
                 # Titulo a cada celda
-        self.tableWidget.setItem(0,0,QTableWidgetItem("CLIENTE"))
-        self.tableWidget.setItem(0,1,QTableWidgetItem("RFC"))
-        self.tableWidget.setItem(0,2,QTableWidgetItem("PAGINA WEB"))
-        self.tableWidget.setItem(0,2,QTableWidget("Direccion"))
+        self.tableWidget.setItem(0,0,QTableWidgetItem("ID VIAJE"))
+        self.tableWidget.setItem(0,1,QTableWidgetItem("GASTO"))
+        self.tableWidget.setItem(0,2,QTableWidgetItem("PRECIO"))
+        self.tableWidget.setItem(0,2,QTableWidgetItem("DiSTANCIA"))
+        self.tableWidget.setItem(0,3,QTableWidgetItem("DIRECCION"))
         
        #consulta BD srvicio
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()
 
 
-        consulta= ('select RAZ_SOC , RFC,CORREO ,PAG_WEB FROM CLIENTE JOIN CORREO USING (ID_COR)')
+        consulta= ('select ID_VIA,GASTO,PRECIO,DISTANCIA FROM VIAJE')
         datos=cursor.execute(consulta).fetchall()
         
         #ciclo para recorrer tabla BD

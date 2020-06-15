@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5.QtWidgets import QTableWidget ,QTableWidgetItem,QErrorMessage, QMessageBox
+import cx_Oracle
 class Unidades(object):
 
     #-------------------------------------------- Funcion MOVER entre Pantallas -----------------------------------------------------#
@@ -37,6 +38,32 @@ class Unidades(object):
         self.tableWidget.setColumnCount(0)
         #Filas de la tabla (BD)
         self.tableWidget.setRowCount(0)
+
+
+
+        # Titulo a cada celda
+        self.tableWidget.setItem(0,0,QTableWidgetItem("MODELO"))
+        self.tableWidget.setItem(0,1,QTableWidgetItem("PLACA"))
+        self.tableWidget.setItem(0,2,QTableWidgetItem("AGENCIA"))
+        
+       #consulta BD srvicio
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        cursor=conecion.cursor()
+
+
+        consulta= ('SELECT MODELO   ,PLACA , AGENCIA FROM UNIDAD ')
+        datos=cursor.execute(consulta).fetchall()
+        
+        #ciclo para recorrer tabla BD
+        if len (datos) >0:
+            fila =1
+            for p in datos:
+                columna=1
+                for c in p:
+                    celda=QTableWidgetItem(str(c))
+                    self.tableWidget.setItem(fila,columna,celda)
+                    columna +=1
+                    fila +=1
 
         #--------------------------------------------Boton Insertar-----------------------------------------------------#
 
