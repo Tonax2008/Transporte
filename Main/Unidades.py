@@ -20,6 +20,8 @@ class Unidades(object):
 
     def setupUi(self, Form):
 
+        self.mensajes= QMessageBox()
+
 
         #------------------------------------VENTANA PRINCIPAL------------------------------------------#
         #define una venata
@@ -49,7 +51,7 @@ class Unidades(object):
         self.tableWidget.setItem(0,2,QTableWidgetItem("AGENCIA"))
         
        #consulta BD srvicio
-        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        self.conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()
 
 
@@ -72,8 +74,8 @@ class Unidades(object):
         #------------INSTERT-------------#
 
 
-
-        #------------------------------------ BOTONES -----------------------------------------#
+    #demas codigo 
+     #------------------------------------ BOTONES -----------------------------------------#
 
         #---Boton insertar---#
         
@@ -224,4 +226,41 @@ class Unidades(object):
         self.comboBox.setItemText(0,  "FIL1")
         self.comboBox.setItemText(1,  "FIL2")
         self.comboBox.setItemText(2,  "FIL3")
+
+    def insertar(self):
+        
+        valor_id=0
+        AGENCIA=""
+        MODELO=""
+        PLACA=""
+
+        valor_id=self.lineEdit_C1.text().strip()
+        AGENCIA=self.lineEdit_C2.text().strip()
+        PLACA=self.lineEdit_C3.text().strip()
+
+
+
+
+        if not self.exist_id(valor_id):
+            
+            insert="Insert into UNIDAD VALUES( {} '{}' '{}' '{}') ".format(valor_id,AGENCIA,MODELO,PLACA)
+            cursor=conecion.cursor()
+            cursor.execute(insert)
+            self.conecion.commit()
+        
+        else:
+            self.mensajes.setText("EL ID YA EXISTE")
+            self.mensaje.execute
+
+        
+    def exist_id(self,num_id):
+        #consulta BD srvicio
+        
+        
+        verific='select*FROM UNIDAD WHERE id={} '.format(num_id)
+        cursor=conecion.cursor()
+        resultado=cursor.execute(verific).fetchall()
+
+        return len(resultado) >0
+
 

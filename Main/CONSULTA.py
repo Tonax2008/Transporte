@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QTableWidget ,QTableWidgetItem,QErrorMessage, QMessageBox
 import cx_Oracle
-import venprin
+import VENPRIN
 
 class PAGOS (object):
 
@@ -13,7 +13,7 @@ class PAGOS (object):
         #Define el objeto widget como una ventana principal
         self.window = QtWidgets.QMainWindow()
         #Define el objjeto ui , para regresar a la clase del script principal
-        self.ui = venprin.Ui_Page2()
+        self.ui = VENPRIN.Ui_Page2()
         #Manda un parametro a la ventana principal
         self.ui.setupUi(self.window)
         #Muestra la ventana 
