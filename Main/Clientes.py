@@ -35,23 +35,27 @@ class Clientes(object):
         self.tableWidget.setGeometry(QtCore.QRect(13, 56, 681, 441))
         self.tableWidget.setObjectName("tableWidget")
         #Columnas de la tabla (BD)
-        self.tableWidget.setColumnCount(0)
+        self.tableWidget.setColumnCount(3)
         #Filas de la tabla (BD)
-        self.tableWidget.setRowCount(0)
+        self.tableWidget.setRowCount(20)
 
-                # Titulo a cada celda
+        #Titulo de columna
         self.tableWidget.setItem(0,0,QTableWidgetItem("CLIENTE"))
         self.tableWidget.setItem(0,1,QTableWidgetItem("RFC"))
         self.tableWidget.setItem(0,2,QTableWidgetItem("PAGINA WEB"))
-        self.tableWidget.setItem(0,2,QTableWidget("Direccion"))
+        self.tableWidget.setItem(0,3,QTableWidget("Direccion"))
         
-       #consulta BD srvicio
+       #Conecta BD
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()
 
 
         consulta= ('select RAZ_SOC , RFC,CORREO ,PAG_WEB FROM CLIENTE JOIN CORREO USING (ID_COR)')
         datos=cursor.execute(consulta).fetchall()
+
+        #Consutlta direccion 
+        adress=('SELECT CALLE , COLONIA,CP,DELEGACION,NO_INT,NO_EXT,ESTADO FROM CLIENTE JOIN DIRECCION USING(ID_DIR) JOIN ESTADO USING (ID_EST) ')
+        direccion= cursor.execute(adress).fetchall()
         
         #ciclo para recorrer tabla BD
         if len (datos) >0:
@@ -63,6 +67,20 @@ class Clientes(object):
                     self.tableWidget.setItem(fila,columna,celda)
                     columna +=1
                     fila +=1
+        
+        #Ciclo para rrecorer he imprimir dicrecciones BD
+
+        if len (direccion) >0:
+            fila=1
+
+            for g in direccion:
+                
+
+                
+                celda=QTableWidgetItem(str(g))
+                self.tableWidget.setItem(fila,3,celda)
+                    
+                fila +=1
 
         #--------------------------------------------Boton Insertar-----------------------------------------------------#
 

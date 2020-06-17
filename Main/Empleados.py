@@ -36,11 +36,11 @@ class Empleados(object):
         self.tableWidget.setGeometry(QtCore.QRect(13, 56, 681, 441))
         self.tableWidget.setObjectName("tableWidget")
         #Columnas de la tabla (BD)
-        self.tableWidget.setColumnCount(0)
+        self.tableWidget.setColumnCount(7)
         #Filas de la tabla (BD)
-        self.tableWidget.setRowCount(0)
+        self.tableWidget.setRowCount(20)
 
-        # Titulo a cada celda
+        # Titulo a cada columna
         self.tableWidget.setItem(0,0,QTableWidgetItem("NOMBRE"))
         self.tableWidget.setItem(0,1,QTableWidgetItem("APELLIDO"))
         self.tableWidget.setItem(0,2,QTableWidgetItem("APELLIDO"))
@@ -52,24 +52,51 @@ class Empleados(object):
 
 
 
-        #consulta BD srvicio
+       #Conecta con la BD
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()
 
 
-        consulta= ('SELECT NOMBRE , APE_PAT ,APE_MAT ,TELEFONO,CORREO,NO_SEG FROM EMPLEADO JOIN CORREO USING (ID_COR)')
+        #Consutla 
+        consulta= ('SELECT NOMBRE, APE_PAT ,APE_MAT ,TELEFONO,CORREO,NO_SEG FROM EMPLEADO JOIN CORREO USING (ID_COR) ')
         datos=cursor.execute(consulta).fetchall()
+        
+        #Consutlta direccion 
+        adress=('SELECT CALLE , COLONIA,CP,DELEGACION,NO_INT,NO_EXT,ESTADO FROM EMPLEaDO JOIN DIRECCION USING(ID_DIR) JOIN ESTADO USING (ID_EST) ')
+        direccion= cursor.execute(adress).fetchall()
+        
+        
+        
         
         #ciclo para recorrer tabla BD
         if len (datos) >0:
             fila =1
             for p in datos:
-                columna=1
+                columna=0
                 for c in p:
                     celda=QTableWidgetItem(str(c))
+
+                    #Imprime dentro de la tabla
                     self.tableWidget.setItem(fila,columna,celda)
+                    #print(str(c))
                     columna +=1
-                    fila +=1
+                fila +=1
+
+        
+        #Ciclo para rrecorer he imprimir dicrecciones BD
+
+        if len (direccion) >0:
+            fila=1
+
+            for g in direccion:
+                
+
+                
+                celda=QTableWidgetItem(str(g))
+                self.tableWidget.setItem(fila,6,celda)
+                    
+                fila +=1
+
 
         #--------------------------------------------Boton Insertar-----------------------------------------------------#
 
