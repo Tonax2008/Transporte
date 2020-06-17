@@ -1,22 +1,24 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QTableWidget ,QTableWidgetItem,QErrorMessage, QMessageBox
 import cx_Oracle
-class Unidades(object):
+import venprin
 
-    #-------------------------------------------- Funcion MOVER entre Pantallas -----------------------------------------------------#
+class PAGOS (object):
+
+
+     #-------------------------------------------- Funcion MOVER entre Pantallas -----------------------------------------------------#
 
     def openwindow(self):
 
         #Define el objeto widget como una ventana principal
         self.window = QtWidgets.QMainWindow()
         #Define el objjeto ui , para regresar a la clase del script principal
-        self.ui = Ui_Page2()
+        self.ui = venprin.Ui_Page2()
         #Manda un parametro a la ventana principal
         self.ui.setupUi(self.window)
         #Muestra la ventana 
         self.window.show()
-
-     #-------------------------------------------------- FUNCION Interfaz CONSULTA -----------------------------------------------------------#
+    #-------------------------------------------------- FUNCION Interfaz CONSULTA -----------------------------------------------------------#
 
     def setupUi(self, Form):
 
@@ -43,19 +45,23 @@ class Unidades(object):
         #fila de la tabla
         self.tableWidget.setRowCount(20)
 
-        # Titulo de cada columna
-        self.tableWidget.setItem(0,0,QTableWidgetItem("MODELO"))
-        self.tableWidget.setItem(0,1,QTableWidgetItem("PLACA"))
-        self.tableWidget.setItem(0,2,QTableWidgetItem("AGENCIA"))
-        
-       #consulta BD srvicio
+        # Titulo a cada celda
+        self.tableWidget.setItem(0,0,QTableWidgetItem("ID_PAGO"))
+        self.tableWidget.setItem(0,1,QTableWidgetItem("CLIENTE"))
+        self.tableWidget.setItem(0,2,QTableWidgetItem("METODO"))
+        self.tableWidget.setItem(0,3,QTableWidgetItem("FECHA"))
+
+
+        #--------------------------Comandos ORACLE--------------------------#
+         #Conecta con BD
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()
 
-
-        consulta= ('SELECT MODELO   ,PLACA , AGENCIA FROM UNIDAD ')
+        consulta= ('SELECT ID_Pago ,RAZ_SOC,METODO,FECHA FROM PAGO  JOIN CLIENTE USING (ID_CLI) JOIN METODO_PAGO USING (ID_MET) ')
         datos=cursor.execute(consulta).fetchall()
         
+
+        #------------CONSULTAS-------------#
         #ciclo para recorrer tabla BD
         if len (datos) >0:
             fila =1
@@ -65,7 +71,7 @@ class Unidades(object):
                     celda=QTableWidgetItem(str(c))
                     self.tableWidget.setItem(fila,columna,celda)
                     columna +=1
-                fila +=1
+                    fila +=1
         
        
 
@@ -224,4 +230,3 @@ class Unidades(object):
         self.comboBox.setItemText(0,  "FIL1")
         self.comboBox.setItemText(1,  "FIL2")
         self.comboBox.setItemText(2,  "FIL3")
-

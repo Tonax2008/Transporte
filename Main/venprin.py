@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import Viajes
 import Servicios
-import Pagos
+import CONSULTA
 import Clientes
 import Unidades
 import Empleados
@@ -140,7 +140,7 @@ class Ui_Page2(object):
         icon3.addPixmap(QtGui.QPixmap("Img/pagos_icono.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionPAGOS.setIcon(icon3)
         self.actionPAGOS.setObjectName("actionPAGOS")
-        self.actionPAGOS.triggered.connect(lambda: self.openwindow(Pagos.Pagos()))
+        self.actionPAGOS.triggered.connect(lambda: self.openwindow(CONSULTA.PAGOS()))
 
         #-----Opcion Clientes---#
         self.actionCLIENTES = QtWidgets.QAction(Form)

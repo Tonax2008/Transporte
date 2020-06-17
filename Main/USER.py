@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-import venprin
+import VENPRIN
 import mysql.connector
 
 
@@ -10,13 +10,13 @@ class Ui_Form(object):
     def __init__(self):
         
 
-        self.pantalla_2=venprin.Ui_Page2()
+        self.pantalla_2=VENPRIN.Ui_Page2()
 
     def openwindow(self):
 
         
         self.window = QtWidgets.QMainWindow()
-        self.ui = venprin.Ui_Page2()
+        self.ui = VENPRIN.Ui_Page2()
         self.ui.setupUi(self.window)
         Form.hide()
         self.window.show()
