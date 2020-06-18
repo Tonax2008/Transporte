@@ -27,7 +27,7 @@ class Viajes(object):
         #Dedine tamaño de la ventana principal
         Form.resize(1049, 833)
         #Nombre de la ventana 
-        Form.setWindowTitle("VIAJES")
+        Form.setWindowTitle("DIRECCION")
 
         self.mensajes= QMessageBox()
 
@@ -41,59 +41,48 @@ class Viajes(object):
         #Nombre de la tablas
         self.tableWidget.setObjectName("tableWidget")
         #Columnas de la tabla
-        self.tableWidget.setColumnCount(4)
+        self.tableWidget.setColumnCount(8)
         #fila de la tabla
         self.tableWidget.setRowCount(20)
 
         # Titulo a cada columna
-        self.tableWidget.setItem(0,0,QTableWidgetItem("ID VIAJE"))
-        self.tableWidget.setItem(0,1,QTableWidgetItem("GASTO"))
-        self.tableWidget.setItem(0,2,QTableWidgetItem("PRECIO"))
-        self.tableWidget.setItem(0,3,QTableWidgetItem("DiSTANCIA"))
-        self.tableWidget.setItem(0,4,QTableWidgetItem("DIRECCION"))
+        self.tableWidget.setItem(0,0,QTableWidgetItem("ID DIRECCION"))
+        self.tableWidget.setItem(0,1,QTableWidgetItem("CALLE"))
+        self.tableWidget.setItem(0,2,QTableWidgetItem("COLONIA"))
+        self.tableWidget.setItem(0,3,QTableWidgetItem("CP"))
+        self.tableWidget.setItem(0,4,QTableWidgetItem("DELEGACION"))
+        self.tableWidget.setItem(0,5,QTableWidgetItem("NO INTERIOR"))
+        self.tableWidget.setItem(0,6,QTableWidgetItem("NO EXTERIOR"))
+        self.tableWidget.setItem(0,7,QTableWidgetItem("ESTADO"))
         
        #Conecta DB
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()
 
 
-        consulta= ('select ID_VIA,GASTO,PRECIO,DISTANCIA FROM VIAJE')
+        consulta= ('SELECT ID_DIR ,CALLE,COLONIA,CP,DELEGACION,NO_INT,NO_EXT,ESTADO FROM DIRECCION JOIN ESTADO USING (ID_EST) ')
         datos=cursor.execute(consulta).fetchall()
         
 
-        #Consutlta direccion 
-        adress=('SELECT CALLE , COLONIA,CP,DELEGACION,NO_INT,NO_EXT,ESTADO FROM VIAJE JOIN DIRECCION USING(ID_DIR) JOIN ESTADO USING (ID_EST) ')
-        direccion= cursor.execute(adress).fetchall()
+      
 
         #ciclo para recorrer tabla BD
         if len (datos) >0:
             fila =1
             for p in datos:
-                columna=1
+                columna=0
                 for c in p:
                     celda=QTableWidgetItem(str(c))
                     self.tableWidget.setItem(fila,columna,celda)
                     columna +=1
                 fila +=1
         
-        #Ciclo para rrecorer he imprimir dicrecciones BD
-
-        if len (direccion) >0:
-            fila=1
-
-            for g in direccion:
-                
-
-                
-                celda=QTableWidgetItem(str(g))
-                self.tableWidget.setItem(fila,4,celda)
-                    
-                fila +=1
+        
 
         
        
 
-        #------------INSTERT-------------#
+        
 
 
 
@@ -156,6 +145,23 @@ class Viajes(object):
         self.CAMPO_5.setGeometry(QtCore.QRect(510, 60, 71, 16))
         self.CAMPO_5.setObjectName("CAMPO_5")
 
+        self.CAMPO_6 = QtWidgets.QLabel(Form)
+        self.CAMPO_6.setGeometry(QtCore.QRect(610, 60, 71, 16))
+        self.CAMPO_6.setObjectName("CAMPO_6")
+
+
+        self.CAMPO_7 = QtWidgets.QLabel(Form)
+        self.CAMPO_7.setGeometry(QtCore.QRect(710, 60, 71, 16))
+        self.CAMPO_7.setObjectName("CAMPO_7")
+
+
+        self.CAMPO_8 = QtWidgets.QLabel(Form)
+        self.CAMPO_8.setGeometry(QtCore.QRect(810, 60, 71, 16))
+        self.CAMPO_8.setObjectName("CAMPO_8")
+
+
+        
+
 
 
 
@@ -193,6 +199,20 @@ class Viajes(object):
         self.lineEdit_C5.setGeometry(QtCore.QRect(510, 80, 81, 21))
         self.lineEdit_C5.setObjectName("lineEdit_C5")
 
+        self.lineEdit_C6 = QtWidgets.QLineEdit(Form)
+        self.lineEdit_C6.setGeometry(QtCore.QRect(610, 80, 81, 21))
+        self.lineEdit_C6.setObjectName("lineEdit_C6")
+
+        self.lineEdit_C7 = QtWidgets.QLineEdit(Form)
+        self.lineEdit_C7.setGeometry(QtCore.QRect(710, 80, 81, 21))
+        self.lineEdit_C7.setObjectName("lineEdit_C7")
+
+
+        self.lineEdit_C8 = QtWidgets.QLineEdit(Form)
+        self.lineEdit_C8.setGeometry(QtCore.QRect(810, 80, 81, 21))
+        self.lineEdit_C8.setObjectName("lineEdit_8")
+
+
 
         
 
@@ -212,10 +232,13 @@ class Viajes(object):
         self.BT_BUSCAR.setText( "BUSCAR")
         self.BT_REGRESAR.setText( "REGRESAR")
         self.CAMPO_1.setText( "ID")
-        self.CAMPO_2.setText( "GASTO")
-        self.CAMPO_3.setText( "PRECIO")
-        self.CAMPO4.setText( "DIRECCION")
-        self.CAMPO_5.setText( "DISTANCIA")
+        self.CAMPO_2.setText( "CALLE")
+        self.CAMPO_3.setText( "COLONIA")
+        self.CAMPO4.setText( "CP")
+        self.CAMPO_5.setText( "DELEGACION")
+        self.CAMPO_6.setText( "NO INT")
+        self.CAMPO_7.setText( "NO EXT")
+        self.CAMPO_8.setText( "ESTADO")
         
         self.comboBox.setItemText(0,  "FIL1")
         self.comboBox.setItemText(1,  "FIL2")
@@ -224,24 +247,43 @@ class Viajes(object):
     def insertar(self):
 
 
+        #DECLARA VARIABLES DE LOS EDITLABEL PARA PODER INSERTAR
         li_id=self.lineEdit_C1.text().strip()
-        li_GASTO=self.lineEdit_C2.text().strip()
-        li_PRECIO=self.lineEdit_C3.text().strip()
-        li_DIRE=self.lineEdit_C4.text().strip()
-        li_DISTANCIA=self.lineEdit_C5.text().strip()
+        li_CALLE=self.lineEdit_C2.text().strip()
+        li_COLONIA=self.lineEdit_C3.text().strip()
+        li_CP=self.lineEdit_C4.text().strip()
+        li_DELEGA=self.lineEdit_C5.text().strip()
+        li_NOINT=self.lineEdit_C6.text().strip()
+        li_NOEXT=self.lineEdit_C7.text().strip()
+        li_ESTADO=self.lineEdit_C8.text().strip()
       
 
         
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()
 
+
+        busqueda_1=("Select id_est from DIRECCION  where estado= '{}' ".format(li_ESTADO))
+        resultado_1=cursor.execute(busqueda_1).fetchall()
+
+        
+
+        #print(resultado_1)
+        metod=[x[0] for x in resultado_1]
+        #print(metod)
+        t_metod=(metod[0])
+        
+        idmet=int(t_metod)
+             
+       
+
        
 
 
-
+        #VERIFICA QUE NO EXISTA UN ID PK REPETIDO ANTES DE INSERTAR
         if not self.exist_id(li_id):
             
-            insert=("Insert into VIAJE VALUES( {} ,{} ,{} ,{},{}) ".format(li_id,li_GASTO,li_PRECIO,li_DIRE,li_DISTANCIA))
+            insert=("Insert into DIRECCION VALUES( {} ,'{}' ,'{}' ,{},'{}',{},{},{}) ".format(li_id,li_CALLE,li_COLONIA,li_CP,li_DELEGA,li_NOEXT,li_NOINT,idmet))
             print(insert)
 
             cursor.execute(insert)
@@ -251,7 +293,8 @@ class Viajes(object):
             self.mensajes.setText("EL ID YA EXISTE")
             self.mensajes.execute
 
-        
+
+        #FUNCION COMPUREBA DUPLICIDAD DE PK ID
     def exist_id(self,num_id):
         #consulta BD srvicio
         

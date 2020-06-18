@@ -27,7 +27,10 @@ class Clientes(object):
         #Dedine tamaño de la ventana principal
         Form.resize(1049, 833)
         #Nombre de la ventana 
-        Form.setWindowTitle("Pagos")
+        Form.setWindowTitle("CLIENTES")
+
+
+        self.mensajes= QMessageBox()
 
 
         #------------------------------------TABLA CONTENODR BD------------------------------------------# 
@@ -39,7 +42,7 @@ class Clientes(object):
         #Nombre de la tablas
         self.tableWidget.setObjectName("tableWidget")
         #Columnas de la tabla
-        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setColumnCount(4)
         #fila de la tabla
         self.tableWidget.setRowCount(20)
 
@@ -65,7 +68,7 @@ class Clientes(object):
         if len (datos) >0:
             fila =1
             for p in datos:
-                columna=1
+                columna=0
                 for c in p:
                     celda=QTableWidgetItem(str(c))
                     self.tableWidget.setItem(fila,columna,celda)
@@ -156,17 +159,6 @@ class Clientes(object):
         self.CAMPO_6 = QtWidgets.QLabel(Form)
         self.CAMPO_6.setGeometry(QtCore.QRect(610, 60, 71, 16))
         self.CAMPO_6.setObjectName("CAMPO_6")
-
-
-        self.CAMPO_7 = QtWidgets.QLabel(Form)
-        self.CAMPO_7.setGeometry(QtCore.QRect(710, 60, 71, 16))
-        self.CAMPO_7.setObjectName("CAMPO_7")
-
-
-        self.CAMPO_8 = QtWidgets.QLabel(Form)
-        self.CAMPO_8.setGeometry(QtCore.QRect(810, 60, 71, 16))
-        self.CAMPO_8.setObjectName("CAMPO_8")
-
         
         #------------------------------------ Text Edit (barra de texto editable) -----------------------------------------#
 
@@ -187,30 +179,19 @@ class Clientes(object):
         self.lineEdit_C2.setGeometry(QtCore.QRect(230, 80, 81, 21))
         self.lineEdit_C2.setObjectName("lineEdit_C2")
 
+        self.lineEdit_C3 = QtWidgets.QLineEdit(Form)
+        self.lineEdit_C3.setGeometry(QtCore.QRect(320, 80, 81, 21))
+        self.lineEdit_C3.setObjectName("lineEdit_C3")
+
 
         self.lineEdit_C4 = QtWidgets.QLineEdit(Form)
         self.lineEdit_C4.setGeometry(QtCore.QRect(410, 80, 81, 21))
         self.lineEdit_C4.setObjectName("lineEdit_C4")
 
 
-        self.lineEdit_C3 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_C3.setGeometry(QtCore.QRect(320, 80, 81, 21))
-        self.lineEdit_C3.setObjectName("lineEdit_C3")
-
-
         self.lineEdit_C5 = QtWidgets.QLineEdit(Form)
         self.lineEdit_C5.setGeometry(QtCore.QRect(510, 80, 81, 21))
         self.lineEdit_C5.setObjectName("lineEdit_C5")
-
-
-        self.lineEdit_C7 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_C7.setGeometry(QtCore.QRect(710, 80, 81, 21))
-        self.lineEdit_C7.setObjectName("lineEdit_C7")
-
-
-        self.lineEdit_8 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_8.setGeometry(QtCore.QRect(810, 80, 81, 21))
-        self.lineEdit_8.setObjectName("lineEdit_8")
 
 
         self.lineEdit_C6 = QtWidgets.QLineEdit(Form)
@@ -232,15 +213,85 @@ class Clientes(object):
         self.BT_EDITAR.setText( "EDITAR")
         self.BT_BUSCAR.setText( "BUSCAR")
         self.BT_REGRESAR.setText( "REGRESAR")
-        self.CAMPO_1.setText( "CAMPO1")
-        self.CAMPO_2.setText( "CAMPO2")
-        self.CAMPO_3.setText( "CAMPO3")
-        self.CAMPO4.setText( "CAMPO4")
-        self.CAMPO_5.setText( "CAMPO5")
-        self.CAMPO_6.setText( "CAMPO6")
-        self.CAMPO_7.setText( "CAMPO 7")
-        self.CAMPO_8.setText( "CAMPO 8")
+        self.CAMPO_1.setText( "ID")
+        self.CAMPO_2.setText( "EMPRESA")
+        self.CAMPO_3.setText( "RFC")
+        self.CAMPO4.setText( "PAG WEB")
+        self.CAMPO_5.setText( "CORREO")
+        self.CAMPO_6.setText( "DIRECCION")
+        
         self.comboBox.setItemText(0,  "FIL1")
         self.comboBox.setItemText(1,  "FIL2")
         self.comboBox.setItemText(2,  "FIL3")
+
+
+
+    def insertar(self):
+
+
+        li_idcli=self.lineEdit_C1.text().strip()
+        li_RazonSoc=self.lineEdit_C2.text().strip()
+        li_RFC=self.lineEdit_C3.text().strip()
+        li_pagweb=self.lineEdit_C4.text().strip()
+        li_idcor=self.lineEdit_C5.text().strip().lower()
+        li_iddir=self.lineEdit_C6.text().strip().lower()
+
+
+        
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        cursor=conecion.cursor()
+
+        #Busca el id en la tabla correo  que corresponda al correo ingresado
+        busqueda_1=("Select id_cor from CORREO  where METODO= '{}'".format(li_idcor))
+        resultado_1=cursor.execute(busqueda_1).fetchall()
+
+        #Busca el id en la tabla clientes con el cliente que corresponda
+        busqueda_2=("Select id_cli from cliente  where RAZ_SOC= '{}'".format(li_iddir))
+        resultado_2=cursor.execute(busqueda_2).fetchall()
+
+        #Convierte la tupla lista tomada de la BD a una lista
+        #print(resultado_1)
+        id_1=[x[0] for x in resultado_1]
+        #print(metod)
+        #Selecciona el primer valor de la lista para pasarlo a la consulta en insert
+        t_id1=(id_1[0])
+        #print(m_metod)
+
+        id_2=[x[0]for x in resultado_2]
+        t_id2=(id_2[0])
+
+
+       
+        
+   
+
+
+       
+
+
+
+        if not self.exist_id(li_idcli):
+            
+            insert=("Insert into CLIENTE VALUES( {} ,'{}' ,'{}' ,'{}',{},{}) ".format(li_idcli,li_RazonSoc,li_RFC, li_pagweb,t_id1,t_id2))
+            print(insert)
+
+            
+            cursor.execute(insert)
+            conecion.commit()
+        
+        else:
+            self.mensajes.setText("EL ID YA EXISTE")
+            self.mensajes.execute
+
+        
+    def exist_id(self,num_id):
+        #consulta BD srvicio
+        
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        verific=('select id_met FROM PAGO WHERE ID_PAGO={} '.format(num_id))
+        cursor=conecion.cursor()
+        resultado=cursor.execute(verific).fetchall()
+
+        return len(resultado) >0
+ 
 

@@ -28,7 +28,9 @@ class Empleados(object):
         #Dedine tamaño de la ventana principal
         Form.resize(1049, 833)
         #Nombre de la ventana 
-        Form.setWindowTitle("Pagos")
+        Form.setWindowTitle("EMPLEADOS")
+
+        self.mensajes= QMessageBox()
 
 
         #------------------------------------TABLA CONTENODR BD------------------------------------------# 
@@ -40,7 +42,7 @@ class Empleados(object):
         #Nombre de la tablas
         self.tableWidget.setObjectName("tableWidget")
         #Columnas de la tabla
-        self.tableWidget.setColumnCount(6)
+        self.tableWidget.setColumnCount(7)
         #fila de la tabla
         self.tableWidget.setRowCount(20)
 
@@ -98,6 +100,7 @@ class Empleados(object):
 
                 
                 celda=QTableWidgetItem(str(g))
+                #INICIA FILA 6
                 self.tableWidget.setItem(fila,6,celda)
                     
                 fila +=1
@@ -105,8 +108,7 @@ class Empleados(object):
         
        
 
-        #------------INSTERT-------------#
-
+     
 
 
         #------------------------------------ BOTONES -----------------------------------------#
@@ -204,35 +206,34 @@ class Empleados(object):
         self.lineEdit_C2.setGeometry(QtCore.QRect(230, 80, 81, 21))
         self.lineEdit_C2.setObjectName("lineEdit_C2")
 
+        self.lineEdit_C3 = QtWidgets.QLineEdit(Form)
+        self.lineEdit_C3.setGeometry(QtCore.QRect(320, 80, 81, 21))
+        self.lineEdit_C3.setObjectName("lineEdit_C3")
 
         self.lineEdit_C4 = QtWidgets.QLineEdit(Form)
         self.lineEdit_C4.setGeometry(QtCore.QRect(410, 80, 81, 21))
         self.lineEdit_C4.setObjectName("lineEdit_C4")
 
 
-        self.lineEdit_C3 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_C3.setGeometry(QtCore.QRect(320, 80, 81, 21))
-        self.lineEdit_C3.setObjectName("lineEdit_C3")
-
-
         self.lineEdit_C5 = QtWidgets.QLineEdit(Form)
         self.lineEdit_C5.setGeometry(QtCore.QRect(510, 80, 81, 21))
         self.lineEdit_C5.setObjectName("lineEdit_C5")
 
+        self.lineEdit_C6 = QtWidgets.QLineEdit(Form)
+        self.lineEdit_C6.setGeometry(QtCore.QRect(610, 80, 81, 21))
+        self.lineEdit_C6.setObjectName("lineEdit_C6")
 
         self.lineEdit_C7 = QtWidgets.QLineEdit(Form)
         self.lineEdit_C7.setGeometry(QtCore.QRect(710, 80, 81, 21))
         self.lineEdit_C7.setObjectName("lineEdit_C7")
 
 
-        self.lineEdit_8 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_8.setGeometry(QtCore.QRect(810, 80, 81, 21))
-        self.lineEdit_8.setObjectName("lineEdit_8")
+        self.lineEdit_C8 = QtWidgets.QLineEdit(Form)
+        self.lineEdit_C8.setGeometry(QtCore.QRect(810, 80, 81, 21))
+        self.lineEdit_C8.setObjectName("lineEdit_8")
 
 
-        self.lineEdit_C6 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_C6.setGeometry(QtCore.QRect(610, 80, 81, 21))
-        self.lineEdit_C6.setObjectName("lineEdit_C6")
+        
 
         #---------------------- Caja de filtrar  con sus opciones-------------#
         self.comboBox = QtWidgets.QComboBox(Form)
@@ -249,14 +250,59 @@ class Empleados(object):
         self.BT_EDITAR.setText( "EDITAR")
         self.BT_BUSCAR.setText( "BUSCAR")
         self.BT_REGRESAR.setText( "REGRESAR")
-        self.CAMPO_1.setText( "CAMPO1")
-        self.CAMPO_2.setText( "CAMPO2")
-        self.CAMPO_3.setText( "CAMPO3")
-        self.CAMPO4.setText( "CAMPO4")
-        self.CAMPO_5.setText( "CAMPO5")
-        self.CAMPO_6.setText( "CAMPO6")
-        self.CAMPO_7.setText( "CAMPO 7")
-        self.CAMPO_8.setText( "CAMPO 8")
+        self.CAMPO_1.setText( "ID")
+        self.CAMPO_2.setText( "NOMBRE")
+        self.CAMPO_3.setText( "APELLIDO PATERNO")
+        self.CAMPO4.setText( "APELLIDO MATERNO ")
+        self.CAMPO_5.setText( "TELEFONO")
+        self.CAMPO_6.setText( "USUARIO")
+        self.CAMPO_7.setText( "CONTRASEÑA")
+        self.CAMPO_8.setText( "NO. SEGURO")
         self.comboBox.setItemText(0,  "FIL1")
         self.comboBox.setItemText(1,  "FIL2")
         self.comboBox.setItemText(2,  "FIL3")
+
+
+    def insertar(self):
+
+
+        li_id=self.lineEdit_C1.text().strip()
+        li_NOMBRE=self.lineEdit_C2.text().strip()
+        li_APEPA=self.lineEdit_C3.text().strip()
+        li_APEMA=self.lineEdit_C4.text().strip()
+        li_TELEFONO=self.lineEdit_C5.text().strip()
+        li_USUARIO=self.lineEdit_C6.text().strip()
+        li_PASSWORD=self.lineEdit_C7.text().strip()
+        li_NOSEGURO=self.lineEdit_C8.text().strip()
+
+        
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        cursor=conecion.cursor()
+
+       
+
+
+
+        if not self.exist_id(li_id):
+            
+            insert=("Insert into EMPLEADO VALUES( {} ,'{}' ,'{}' ,'{}',{},'{}','{}',{},{},'{}') ".format(li_id,li_NOMBRE,li_APEPA,li_APEMA,li_TELEFONO,li_USUARIO,li_PASSWORD,"null","null",li_NOSEGURO))
+            print(insert)
+
+            cursor.execute(insert)
+            conecion.commit()
+        
+        else:
+            self.mensajes.setText("EL ID YA EXISTE")
+            self.mensajes.execute
+
+        
+    def exist_id(self,num_id):
+        #consulta BD srvicio
+        
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        verific=('select id_met FROM PAGO WHERE ID_PAGO={} '.format(num_id))
+        cursor=conecion.cursor()
+        resultado=cursor.execute(verific).fetchall()
+
+        return len(resultado) >0
+ 

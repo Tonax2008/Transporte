@@ -26,7 +26,10 @@ class Servicios(object):
         #Dedine tamaño de la ventana principal
         Form.resize(1049, 833)
         #Nombre de la ventana 
-        Form.setWindowTitle("Pagos")
+        Form.setWindowTitle("SERVICIOS")
+
+
+        self.mensajes= QMessageBox()
 
 
         #------------------------------------TABLA CONTENODR BD------------------------------------------# 
@@ -55,6 +58,9 @@ class Servicios(object):
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()
 
+
+        #AGREGAR COMOBOX PARA EVITAR BUSACR VARIOS ID
+
         consulta= ('select  RAZ_SOC,DESCRIPCION , ID_VIA,MONTO,ID_UNI,NOMBRE FROM SERVICIO JOIN CLIENTE USING (ID_CLI) JOIN PAGO USING (ID_PAGO) JOIN EMPLEADO USING (ID_EMP) JOIN UNIDAD USING   (ID_UNI) ')
         datos=cursor.execute(consulta).fetchall()
 
@@ -70,7 +76,6 @@ class Servicios(object):
 
        
 
-        #------------INSTERT-------------#
 
 
 
@@ -170,14 +175,14 @@ class Servicios(object):
         self.lineEdit_C2.setObjectName("lineEdit_C2")
 
 
-        self.lineEdit_C4 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_C4.setGeometry(QtCore.QRect(410, 80, 81, 21))
-        self.lineEdit_C4.setObjectName("lineEdit_C4")
-
-
         self.lineEdit_C3 = QtWidgets.QLineEdit(Form)
         self.lineEdit_C3.setGeometry(QtCore.QRect(320, 80, 81, 21))
         self.lineEdit_C3.setObjectName("lineEdit_C3")
+
+
+        self.lineEdit_C4 = QtWidgets.QLineEdit(Form)
+        self.lineEdit_C4.setGeometry(QtCore.QRect(410, 80, 81, 21))
+        self.lineEdit_C4.setObjectName("lineEdit_C4")
 
 
         self.lineEdit_C5 = QtWidgets.QLineEdit(Form)
@@ -185,19 +190,21 @@ class Servicios(object):
         self.lineEdit_C5.setObjectName("lineEdit_C5")
 
 
+        self.lineEdit_C6 = QtWidgets.QLineEdit(Form)
+        self.lineEdit_C6.setGeometry(QtCore.QRect(610, 80, 81, 21))
+        self.lineEdit_C6.setObjectName("lineEdit_C6")
+
+
         self.lineEdit_C7 = QtWidgets.QLineEdit(Form)
         self.lineEdit_C7.setGeometry(QtCore.QRect(710, 80, 81, 21))
         self.lineEdit_C7.setObjectName("lineEdit_C7")
 
 
-        self.lineEdit_8 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_8.setGeometry(QtCore.QRect(810, 80, 81, 21))
-        self.lineEdit_8.setObjectName("lineEdit_8")
+        self.lineEdit_C8 = QtWidgets.QLineEdit(Form)
+        self.lineEdit_C8.setGeometry(QtCore.QRect(810, 80, 81, 21))
+        self.lineEdit_C8.setObjectName("lineEdit_8")
 
 
-        self.lineEdit_C6 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_C6.setGeometry(QtCore.QRect(610, 80, 81, 21))
-        self.lineEdit_C6.setObjectName("lineEdit_C6")
 
         #---------------------- Caja de filtrar  con sus opciones-------------#
         self.comboBox = QtWidgets.QComboBox(Form)
@@ -214,15 +221,77 @@ class Servicios(object):
         self.BT_EDITAR.setText( "EDITAR")
         self.BT_BUSCAR.setText( "BUSCAR")
         self.BT_REGRESAR.setText( "REGRESAR")
-        self.CAMPO_1.setText( "CAMPO1")
-        self.CAMPO_2.setText( "CAMPO2")
-        self.CAMPO_3.setText( "CAMPO3")
-        self.CAMPO4.setText( "CAMPO4")
-        self.CAMPO_5.setText( "CAMPO5")
-        self.CAMPO_6.setText( "CAMPO6")
-        self.CAMPO_7.setText( "CAMPO 7")
-        self.CAMPO_8.setText( "CAMPO 8")
+        self.CAMPO_1.setText( "ID")
+        self.CAMPO_2.setText( "FECHA")
+        self.CAMPO_3.setText( "DESCRIPCION")
+        self.CAMPO4.setText( "ID VIAJE")
+        self.CAMPO_5.setText( "ID_PAGO")
+        self.CAMPO_6.setText( "ID_UNIDAD")
+        self.CAMPO_7.setText( "EMPLEADO")
+        self.CAMPO_8.setText( "CLIENTE")
         self.comboBox.setItemText(0,  "FIL1")
         self.comboBox.setItemText(1,  "FIL2")
         self.comboBox.setItemText(2,  "FIL3")
 
+   
+   
+    def insertar(self):
+
+
+        li_id=self.lineEdit_C1.text().strip()
+        li_FECHA=self.lineEdit_C2.text().strip()
+        li_DESCR=self.lineEdit_C3.text().strip()
+        li_IDVIA=self.lineEdit_C4.text().strip()
+        li_IDPAGO=self.lineEdit_C5.text().strip()
+        li_IDUNI=self.lineEdit_C6.text().strip()
+        li_IDEMP=self.lineEdit_C7.text().strip()
+        li_IDCLI=self.lineEdit_C8.text().strip()
+
+        
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        cursor=conecion.cursor()
+
+        #Busca el id en la tabla correo  que corresponda al correo ingresado
+        busqueda_1=("Select id_cor from CORREO  where METODO= '{}'".format(li_idcor))
+        resultado_1=cursor.execute(busqueda_1).fetchall()
+
+        #Busca el id en la tabla clientes con el cliente que corresponda
+        busqueda_2=("Select id_cli from cliente  where RAZ_SOC= '{}'".format(li_iddir))
+        resultado_2=cursor.execute(busqueda_2).fetchall()
+
+        #Convierte la tupla lista tomada de la BD a una lista
+        #print(resultado_1)
+        id_1=[x[0] for x in resultado_1]
+        #print(metod)
+        #Selecciona el primer valor de la lista para pasarlo a la consulta en insert
+        t_id1=(id_1[0])
+        #print(m_metod)
+
+        id_2=[x[0]for x in resultado_2]
+        t_id2=(id_2[0])
+
+
+
+        if not self.exist_id(li_id):
+            
+            insert=("Insert into SERVICIO VALUES( {} ,'{}' ,'{}' ,{},{},{},{},{},{}) ".format(li_id,li_FECHA,li_DESCR,li_IDVIA,li_IDPAGO,li_IDUNI,li_IDEMP,li_IDCLI))
+            print(insert)
+
+            cursor.execute(insert)
+            conecion.commit()
+        
+        else:
+            self.mensajes.setText("EL ID YA EXISTE")
+            self.mensajes.execute
+
+        
+    def exist_id(self,num_id):
+        #consulta BD srvicio
+        
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        verific=('select id_met FROM PAGO WHERE ID_PAGO={} '.format(num_id))
+        cursor=conecion.cursor()
+        resultado=cursor.execute(verific).fetchall()
+
+        return len(resultado) >0
+ 

@@ -27,7 +27,7 @@ class Viajes(object):
         #Dedine tamaño de la ventana principal
         Form.resize(1049, 833)
         #Nombre de la ventana 
-        Form.setWindowTitle("VIAJES")
+        Form.setWindowTitle("CORREO")
 
         self.mensajes= QMessageBox()
 
@@ -41,59 +41,42 @@ class Viajes(object):
         #Nombre de la tablas
         self.tableWidget.setObjectName("tableWidget")
         #Columnas de la tabla
-        self.tableWidget.setColumnCount(4)
+        self.tableWidget.setColumnCount(2)
         #fila de la tabla
         self.tableWidget.setRowCount(20)
 
         # Titulo a cada columna
-        self.tableWidget.setItem(0,0,QTableWidgetItem("ID VIAJE"))
-        self.tableWidget.setItem(0,1,QTableWidgetItem("GASTO"))
-        self.tableWidget.setItem(0,2,QTableWidgetItem("PRECIO"))
-        self.tableWidget.setItem(0,3,QTableWidgetItem("DiSTANCIA"))
-        self.tableWidget.setItem(0,4,QTableWidgetItem("DIRECCION"))
+        self.tableWidget.setItem(0,0,QTableWidgetItem("ID CORREO"))
+        self.tableWidget.setItem(0,1,QTableWidgetItem("CORREO"))
+      
         
        #Conecta DB
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()
 
 
-        consulta= ('select ID_VIA,GASTO,PRECIO,DISTANCIA FROM VIAJE')
+        consulta= ('SELECT ID_COR,CORREO FROM CORREO')
         datos=cursor.execute(consulta).fetchall()
         
 
-        #Consutlta direccion 
-        adress=('SELECT CALLE , COLONIA,CP,DELEGACION,NO_INT,NO_EXT,ESTADO FROM VIAJE JOIN DIRECCION USING(ID_DIR) JOIN ESTADO USING (ID_EST) ')
-        direccion= cursor.execute(adress).fetchall()
-
+        
         #ciclo para recorrer tabla BD
         if len (datos) >0:
             fila =1
             for p in datos:
-                columna=1
+                columna=0
                 for c in p:
                     celda=QTableWidgetItem(str(c))
                     self.tableWidget.setItem(fila,columna,celda)
                     columna +=1
                 fila +=1
         
-        #Ciclo para rrecorer he imprimir dicrecciones BD
-
-        if len (direccion) >0:
-            fila=1
-
-            for g in direccion:
-                
-
-                
-                celda=QTableWidgetItem(str(g))
-                self.tableWidget.setItem(fila,4,celda)
-                    
-                fila +=1
+        
 
         
        
 
-        #------------INSTERT-------------#
+        
 
 
 
@@ -143,18 +126,7 @@ class Viajes(object):
         self.CAMPO_2.setObjectName("CAMPO_2")
 
 
-        self.CAMPO_3 = QtWidgets.QLabel(Form)
-        self.CAMPO_3.setGeometry(QtCore.QRect(330, 60, 71, 16))
-        self.CAMPO_3.setObjectName("CAMPO_3")
-
-
-        self.CAMPO4 = QtWidgets.QLabel(Form)
-        self.CAMPO4.setGeometry(QtCore.QRect(420, 60, 71, 16))
-        self.CAMPO4.setObjectName("CAMPO4")
-
-        self.CAMPO_5 = QtWidgets.QLabel(Form)
-        self.CAMPO_5.setGeometry(QtCore.QRect(510, 60, 71, 16))
-        self.CAMPO_5.setObjectName("CAMPO_5")
+        
 
 
 
@@ -179,20 +151,7 @@ class Viajes(object):
         self.lineEdit_C2.setGeometry(QtCore.QRect(230, 80, 81, 21))
         self.lineEdit_C2.setObjectName("lineEdit_C2")
 
-        self.lineEdit_C3 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_C3.setGeometry(QtCore.QRect(320, 80, 81, 21))
-        self.lineEdit_C3.setObjectName("lineEdit_C3")
-
-
-        self.lineEdit_C4 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_C4.setGeometry(QtCore.QRect(410, 80, 81, 21))
-        self.lineEdit_C4.setObjectName("lineEdit_C4")
         
-
-        self.lineEdit_C5 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_C5.setGeometry(QtCore.QRect(510, 80, 81, 21))
-        self.lineEdit_C5.setObjectName("lineEdit_C5")
-
 
         
 
@@ -212,10 +171,8 @@ class Viajes(object):
         self.BT_BUSCAR.setText( "BUSCAR")
         self.BT_REGRESAR.setText( "REGRESAR")
         self.CAMPO_1.setText( "ID")
-        self.CAMPO_2.setText( "GASTO")
-        self.CAMPO_3.setText( "PRECIO")
-        self.CAMPO4.setText( "DIRECCION")
-        self.CAMPO_5.setText( "DISTANCIA")
+        self.CAMPO_2.setText( "CORREO")
+       
         
         self.comboBox.setItemText(0,  "FIL1")
         self.comboBox.setItemText(1,  "FIL2")
@@ -224,12 +181,10 @@ class Viajes(object):
     def insertar(self):
 
 
+        #DECLARA VARIABLES DE LOS EDITLABEL PARA PODER INSERTAR
         li_id=self.lineEdit_C1.text().strip()
-        li_GASTO=self.lineEdit_C2.text().strip()
-        li_PRECIO=self.lineEdit_C3.text().strip()
-        li_DIRE=self.lineEdit_C4.text().strip()
-        li_DISTANCIA=self.lineEdit_C5.text().strip()
-      
+        li_CORREO=self.lineEdit_C2.text().strip()
+     
 
         
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
@@ -238,10 +193,10 @@ class Viajes(object):
        
 
 
-
+        #VERIFICA QUE NO EXISTA UN ID PK REPETIDO ANTES DE INSERTAR
         if not self.exist_id(li_id):
             
-            insert=("Insert into VIAJE VALUES( {} ,{} ,{} ,{},{}) ".format(li_id,li_GASTO,li_PRECIO,li_DIRE,li_DISTANCIA))
+            insert=("Insert into CORREO VALUES( {} ,'{}') ".format(li_id,li_CORREO))
             print(insert)
 
             cursor.execute(insert)
@@ -251,7 +206,8 @@ class Viajes(object):
             self.mensajes.setText("EL ID YA EXISTE")
             self.mensajes.execute
 
-        
+
+        #FUNCION COMPUREBA DUPLICIDAD DE PK ID
     def exist_id(self,num_id):
         #consulta BD srvicio
         

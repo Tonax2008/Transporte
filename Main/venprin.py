@@ -281,3 +281,4 @@ class Ui_Page2(object):
 
     def button_handler_back(self):
         self.openwindow()
+    

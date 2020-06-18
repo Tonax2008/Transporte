@@ -22,6 +22,7 @@ class PAGOS (object):
 
     def setupUi(self, Form):
 
+        self.mensajes= QMessageBox()
 
         #------------------------------------VENTANA PRINCIPAL------------------------------------------#
         #define una venata
@@ -41,7 +42,7 @@ class PAGOS (object):
         #Nombre de la tablas
         self.tableWidget.setObjectName("tableWidget")
         #Columnas de la tabla
-        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setColumnCount(4)
         #fila de la tabla
         self.tableWidget.setRowCount(20)
 
@@ -66,16 +67,16 @@ class PAGOS (object):
         if len (datos) >0:
             fila =1
             for p in datos:
-                columna=1
+                columna=0
                 for c in p:
                     celda=QTableWidgetItem(str(c))
                     self.tableWidget.setItem(fila,columna,celda)
                     columna +=1
-                    fila +=1
+                fila +=1
         
        
 
-        #------------INSTERT-------------#
+        
 
 
 
@@ -89,9 +90,11 @@ class PAGOS (object):
         self.BT_INSERTAR.setGeometry(QtCore.QRect(242, 12, 113, 32))
         #Nombre del objeto 
         self.BT_INSERTAR.setObjectName("BT_INSERTAR")
+        #Conecta el botn con la funcion insertar 
+        self.BT_INSERTAR.clicked.connect(self.insertar)
 
 
-        #---Boton Editar---#
+    #---Boton Editar---#
 
         self.BT_EDITAR = QtWidgets.QPushButton(Form)
         self.BT_EDITAR.setGeometry(QtCore.QRect(127, 12, 113, 32))
@@ -140,19 +143,7 @@ class PAGOS (object):
         self.CAMPO_5.setObjectName("CAMPO_5")
 
 
-        self.CAMPO_6 = QtWidgets.QLabel(Form)
-        self.CAMPO_6.setGeometry(QtCore.QRect(610, 60, 71, 16))
-        self.CAMPO_6.setObjectName("CAMPO_6")
-
-
-        self.CAMPO_7 = QtWidgets.QLabel(Form)
-        self.CAMPO_7.setGeometry(QtCore.QRect(710, 60, 71, 16))
-        self.CAMPO_7.setObjectName("CAMPO_7")
-
-
-        self.CAMPO_8 = QtWidgets.QLabel(Form)
-        self.CAMPO_8.setGeometry(QtCore.QRect(810, 60, 71, 16))
-        self.CAMPO_8.setObjectName("CAMPO_8")
+       
 
         
         #------------------------------------ Text Edit (barra de texto editable) -----------------------------------------#
@@ -175,14 +166,16 @@ class PAGOS (object):
         self.lineEdit_C2.setObjectName("lineEdit_C2")
 
 
-        self.lineEdit_C4 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_C4.setGeometry(QtCore.QRect(410, 80, 81, 21))
-        self.lineEdit_C4.setObjectName("lineEdit_C4")
 
 
         self.lineEdit_C3 = QtWidgets.QLineEdit(Form)
         self.lineEdit_C3.setGeometry(QtCore.QRect(320, 80, 81, 21))
         self.lineEdit_C3.setObjectName("lineEdit_C3")
+
+        self.lineEdit_C4 = QtWidgets.QLineEdit(Form)
+        self.lineEdit_C4.setGeometry(QtCore.QRect(410, 80, 81, 21))
+        self.lineEdit_C4.setObjectName("lineEdit_C4")
+
 
 
         self.lineEdit_C5 = QtWidgets.QLineEdit(Form)
@@ -190,19 +183,7 @@ class PAGOS (object):
         self.lineEdit_C5.setObjectName("lineEdit_C5")
 
 
-        self.lineEdit_C7 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_C7.setGeometry(QtCore.QRect(710, 80, 81, 21))
-        self.lineEdit_C7.setObjectName("lineEdit_C7")
-
-
-        self.lineEdit_8 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_8.setGeometry(QtCore.QRect(810, 80, 81, 21))
-        self.lineEdit_8.setObjectName("lineEdit_8")
-
-
-        self.lineEdit_C6 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_C6.setGeometry(QtCore.QRect(610, 80, 81, 21))
-        self.lineEdit_C6.setObjectName("lineEdit_C6")
+        
 
         #---------------------- Caja de filtrar  con sus opciones-------------#
         self.comboBox = QtWidgets.QComboBox(Form)
@@ -219,14 +200,78 @@ class PAGOS (object):
         self.BT_EDITAR.setText( "EDITAR")
         self.BT_BUSCAR.setText( "BUSCAR")
         self.BT_REGRESAR.setText( "REGRESAR")
-        self.CAMPO_1.setText( "CAMPO1")
-        self.CAMPO_2.setText( "CAMPO2")
-        self.CAMPO_3.setText( "CAMPO3")
-        self.CAMPO4.setText( "CAMPO4")
-        self.CAMPO_5.setText( "CAMPO5")
-        self.CAMPO_6.setText( "CAMPO6")
-        self.CAMPO_7.setText( "CAMPO 7")
-        self.CAMPO_8.setText( "CAMPO 8")
+        self.CAMPO_1.setText( "ID_PAGO")
+        self.CAMPO_2.setText( "FECHA")
+        self.CAMPO_3.setText( "METODO")
+        self.CAMPO4.setText( "MONTO")
+        self.CAMPO_5.setText( "CLIENTE")
+        
         self.comboBox.setItemText(0,  "FIL1")
         self.comboBox.setItemText(1,  "FIL2")
         self.comboBox.setItemText(2,  "FIL3")
+
+    def insertar(self):
+
+
+        valor_id=self.lineEdit_C1.text().strip()
+        fecha=self.lineEdit_C2.text().strip()
+        bus_met=self.lineEdit_C3.text().strip()
+        monto=self.lineEdit_C4.text().strip()
+        bus_clie=self.lineEdit_C5.text().strip()
+
+        
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        cursor=conecion.cursor()
+
+
+        busqueda_1=("Select id_met from metodo_pago  where METODO= '{}'".format(bus_met))
+        resultado_1=cursor.execute(busqueda_1).fetchall()
+
+        busqueda_2=("Select id_cli from cliente  where RAZ_SOC= '{}'".format(bus_clie))
+        resultado_2=cursor.execute(busqueda_2).fetchall()
+
+        #print(resultado_1)
+        metod=[x[0] for x in resultado_1]
+        #print(metod)
+        t_metod=(metod[0])
+        #print(m_metod)
+
+        cliente=[x[0]for x in resultado_2]
+        t_cliente=(cliente[0])
+
+
+       
+        
+        idmet=int(t_metod)
+        #print(idmet)        
+        cliente_id=t_cliente
+
+
+       
+
+
+
+        if not self.exist_id(valor_id):
+            
+            insert=("Insert into PAGO VALUES( {} ,'{}' ,{} ,{},{}) ".format(valor_id,fecha,idmet,monto,cliente_id))
+            print(insert)
+
+            
+            cursor.execute(insert)
+            conecion.commit()
+        
+        else:
+            self.mensajes.setText("EL ID YA EXISTE")
+            self.mensajes.execute
+
+        
+    def exist_id(self,num_id):
+        #consulta BD srvicio
+        
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        verific=('select id_met FROM PAGO WHERE ID_PAGO={} '.format(num_id))
+        cursor=conecion.cursor()
+        resultado=cursor.execute(verific).fetchall()
+
+        return len(resultado) >0
+ 
