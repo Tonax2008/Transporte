@@ -42,15 +42,16 @@ class PAGOS (object):
         #Nombre de la tablas
         self.tableWidget.setObjectName("tableWidget")
         #Columnas de la tabla
-        self.tableWidget.setColumnCount(4)
+        self.tableWidget.setColumnCount(5)
         #fila de la tabla
-        self.tableWidget.setRowCount(20)
+        self.tableWidget.setRowCount(25)
 
         # Titulo a cada celda
         self.tableWidget.setItem(0,0,QTableWidgetItem("ID_PAGO"))
-        self.tableWidget.setItem(0,1,QTableWidgetItem("CLIENTE"))
-        self.tableWidget.setItem(0,2,QTableWidgetItem("METODO"))
-        self.tableWidget.setItem(0,3,QTableWidgetItem("FECHA"))
+        self.tableWidget.setItem(0,1,QTableWidgetItem("FECHA"))
+        self.tableWidget.setItem(0,2,QTableWidgetItem("ID METODO"))
+        self.tableWidget.setItem(0,3,QTableWidgetItem("MONTO"))
+        self.tableWidget.setItem(0,4,QTableWidgetItem("ID CLIENTE"))
 
 
         #--------------------------Comandos ORACLE--------------------------#
@@ -58,7 +59,7 @@ class PAGOS (object):
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()
 
-        consulta= ('SELECT ID_Pago ,RAZ_SOC,METODO,FECHA FROM PAGO  JOIN CLIENTE USING (ID_CLI) JOIN METODO_PAGO USING (ID_MET) ')
+        consulta= ('SELECT ID_PAGO ,FECHA ,ID_MET,MONTO,ID_CLI FROM PAGO')
         datos=cursor.execute(consulta).fetchall()
         
 
@@ -75,10 +76,6 @@ class PAGOS (object):
                 fila +=1
         
        
-
-        
-
-
 
         #------------------------------------ BOTONES -----------------------------------------#
 

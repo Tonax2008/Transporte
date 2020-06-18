@@ -42,19 +42,23 @@ class Empleados(object):
         #Nombre de la tablas
         self.tableWidget.setObjectName("tableWidget")
         #Columnas de la tabla
-        self.tableWidget.setColumnCount(7)
+        self.tableWidget.setColumnCount(10)
         #fila de la tabla
-        self.tableWidget.setRowCount(20)
+        self.tableWidget.setRowCount(17)
 
         
         # Titulo a cada columna
-        self.tableWidget.setItem(0,0,QTableWidgetItem("NOMBRE"))
-        self.tableWidget.setItem(0,1,QTableWidgetItem("APELLIDO"))
+
+        self.tableWidget.setItem(0,0,QTableWidgetItem("ID"))
+        self.tableWidget.setItem(0,1,QTableWidgetItem("NOMBRE"))
         self.tableWidget.setItem(0,2,QTableWidgetItem("APELLIDO"))
-        self.tableWidget.setItem(0,3,QTableWidgetItem("TELEFONO"))
-        self.tableWidget.setItem(0,4,QTableWidgetItem("CORREO"))
-        self.tableWidget.setItem(0,5,QTableWidgetItem("# SEGURO"))
-        self.tableWidget.setItem(0,6,QTableWidgetItem("DIRECCION"))
+        self.tableWidget.setItem(0,3,QTableWidgetItem("APELLIDO"))
+        self.tableWidget.setItem(0,4,QTableWidgetItem("TELEFONO"))
+        self.tableWidget.setItem(0,5,QTableWidgetItem("USUARIO"))
+        self.tableWidget.setItem(0,6,QTableWidgetItem("CONTRASEÑA"))
+        self.tableWidget.setItem(0,7,QTableWidgetItem("ID E-MAIL"))
+        self.tableWidget.setItem(0,8,QTableWidgetItem("ID DIRECCION"))
+        self.tableWidget.setItem(0,9,QTableWidgetItem("NO SEGURO"))
 
 
 
@@ -65,15 +69,8 @@ class Empleados(object):
 
 
         #Consutla 
-        consulta= ('SELECT NOMBRE, APE_PAT ,APE_MAT ,TELEFONO,CORREO,NO_SEG FROM EMPLEADO JOIN CORREO USING (ID_COR) ')
+        consulta= ('SELECT ID_EMP,NOMBRE , APE_PAT ,APE_MAT ,TELEFONO,USUARIO,CONTRA,ID_COR,ID_DIR,NO_SEG FROM EMPLEADO ')
         datos=cursor.execute(consulta).fetchall()
-        
-        #Consutlta direccion 
-        adress=('SELECT CALLE , COLONIA,CP,DELEGACION,NO_INT,NO_EXT,ESTADO FROM EMPLEaDO JOIN DIRECCION USING(ID_DIR) JOIN ESTADO USING (ID_EST) ')
-        direccion= cursor.execute(adress).fetchall()
-        
-        
-        
         
         #ciclo para recorrer tabla BD
         if len (datos) >0:
@@ -90,26 +87,6 @@ class Empleados(object):
                 fila +=1
 
         
-        #Ciclo para rrecorer he imprimir dicrecciones BD
-
-        if len (direccion) >0:
-            fila=1
-
-            for g in direccion:
-                
-
-                
-                celda=QTableWidgetItem(str(g))
-                #INICIA FILA 6
-                self.tableWidget.setItem(fila,6,celda)
-                    
-                fila +=1
-
-        
-       
-
-     
-
 
         #------------------------------------ BOTONES -----------------------------------------#
 

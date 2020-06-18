@@ -41,18 +41,20 @@ class Servicios(object):
         #Nombre de la tablas
         self.tableWidget.setObjectName("tableWidget")
         #Columnas de la tabla
-        self.tableWidget.setColumnCount(6)
+        self.tableWidget.setColumnCount(8)
         #fila de la tabla
-        self.tableWidget.setRowCount(20)
+        self.tableWidget.setRowCount(26)
 
        
         # Titulo a cada columna
-        self.tableWidget.setItem(0,0,QTableWidgetItem("Cliente"))
-        self.tableWidget.setItem(0,1,QTableWidgetItem("Descripcion"))
-        self.tableWidget.setItem(0,2,QTableWidgetItem("Id_Viaje"))
-        self.tableWidget.setItem(0,3,QTableWidgetItem("Monto"))
-        self.tableWidget.setItem(0,4,QTableWidgetItem("Unidad"))
-        self.tableWidget.setItem(0,5,QTableWidgetItem("Empleado"))
+        self.tableWidget.setItem(0,0,QTableWidgetItem("ID "))
+        self.tableWidget.setItem(0,1,QTableWidgetItem("FECHA"))
+        self.tableWidget.setItem(0,2,QTableWidgetItem("DESCRIPCION"))
+        self.tableWidget.setItem(0,3,QTableWidgetItem("ID VIAJE"))
+        self.tableWidget.setItem(0,4,QTableWidgetItem("ID PAGO"))
+        self.tableWidget.setItem(0,5,QTableWidgetItem("ID UNIDAD"))
+        self.tableWidget.setItem(0,6,QTableWidgetItem("ID EMPLEADO"))
+        self.tableWidget.setItem(0,7,QTableWidgetItem("ID CLIENTE"))
 
         #Conecta BD
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
@@ -61,7 +63,7 @@ class Servicios(object):
 
         #AGREGAR COMOBOX PARA EVITAR BUSACR VARIOS ID
 
-        consulta= ('select  RAZ_SOC,DESCRIPCION , ID_VIA,MONTO,ID_UNI,NOMBRE FROM SERVICIO JOIN CLIENTE USING (ID_CLI) JOIN PAGO USING (ID_PAGO) JOIN EMPLEADO USING (ID_EMP) JOIN UNIDAD USING   (ID_UNI) ')
+        consulta= ('SELECT ID_SER,FECHA,DESCRIPCION,ID_VIA,ID_PAGO,ID_UNI,ID_EMP,ID_CLI FROM SERVICIO')
         datos=cursor.execute(consulta).fetchall()
 
         if len (datos) >0:
@@ -73,11 +75,6 @@ class Servicios(object):
                     self.tableWidget.setItem(fila,columna,celda)
                     columna +=1
                 fila +=1
-
-       
-
-
-
 
         #------------------------------------ BOTONES -----------------------------------------#
 
