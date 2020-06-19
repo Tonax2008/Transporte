@@ -46,16 +46,17 @@ class Unidades(object):
         self.tableWidget.setRowCount(20)
 
         # Titulo de cada columna
-        self.tableWidget.setItem(0,0,QTableWidgetItem("MODELO"))
-        self.tableWidget.setItem(0,1,QTableWidgetItem("PLACA"))
-        self.tableWidget.setItem(0,2,QTableWidgetItem("AGENCIA"))
-        
+        self.tableWidget.setItem(0,0,QTableWidgetItem("ID UNIDAD"))
+        self.tableWidget.setItem(0,1,QTableWidgetItem("AGENCIA"))
+        self.tableWidget.setItem(0,2,QTableWidgetItem("MODELO"))
+        self.tableWidget.setItem(0,3,QTableWidgetItem("PLACA"))
+
        #consulta BD srvicio
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()
 
 
-        consulta= ('SELECT MODELO   ,PLACA , AGENCIA FROM UNIDAD ')
+        consulta= ('SELECT ID_UNI ,AGENCIA,MODELO , PLACA FROM UNIDAD ')
         datos=cursor.execute(consulta).fetchall()
         
         #ciclo para recorrer tabla BD
@@ -96,11 +97,13 @@ class Unidades(object):
         self.BT_EDITAR.setGeometry(QtCore.QRect(127, 12, 113, 32))
         self.BT_EDITAR.setObjectName("BT_EDITAR")
 
-        #---Boton Buscar---#
+        #---Boton ELIMINAR ---#
 
-        self.BT_BUSCAR = QtWidgets.QPushButton(Form)
-        self.BT_BUSCAR.setGeometry(QtCore.QRect(710, 10, 113, 32))
-        self.BT_BUSCAR.setObjectName("BT_BUSCAR")
+        self.BT_ELIMINAR = QtWidgets.QPushButton(Form)
+        self.BT_ELIMINAR.setGeometry(QtCore.QRect(710, 10, 113, 32))
+        self.BT_ELIMINAR.setObjectName("BT_ELIMINAR")
+        #CONECTA EL BOTON CON LA FUNCION ELIMINAR
+        self.BT_ELIMINAR.clicked.connect(self.Eliminar)
 
         #---Boton Regresar---#
 
@@ -139,12 +142,12 @@ class Unidades(object):
         
         #------------------------------------ Text Edit (barra de texto editable) -----------------------------------------#
 
-        #---cuadro de buscar--#
+        #---cuadro de ELIMINAR--#
         # Declara un text edit 
-        self.lineEdit_BUSCAR = QtWidgets.QLineEdit(Form)
+        self.lineEdit_ELIMINAR = QtWidgets.QLineEdit(Form)
         #Size text edit
-        self.lineEdit_BUSCAR.setGeometry(QtCore.QRect(400, 20, 291, 21))
-        self.lineEdit_BUSCAR.setObjectName("lineEdit_BUSCAR")
+        self.lineEdit_ELIMINAR.setGeometry(QtCore.QRect(400, 20, 291, 21))
+        self.lineEdit_ELIMINAR.setObjectName("lineEdit_ELIMINAR")
 
         #---cuadro de nombre--#
         self.lineEdit_C1 = QtWidgets.QLineEdit(Form)
@@ -180,7 +183,7 @@ class Unidades(object):
         #textos de los botones y campos
         self.BT_INSERTAR.setText( "INSERTAR")
         self.BT_EDITAR.setText( "EDITAR")
-        self.BT_BUSCAR.setText( "BUSCAR")
+        self.BT_ELIMINAR.setText( "ELIMINAR")
         self.BT_REGRESAR.setText( "REGRESAR")
         self.CAMPO_1.setText( "ID")
         self.CAMPO_2.setText( "AGENCIA")
@@ -215,13 +218,38 @@ class Unidades(object):
             cursor=conecion.cursor()
             cursor.execute(insert)
             conecion.commit()
+            conecion.close()
         
         else:
             self.mensajes.setText("EL ID YA EXISTE")
             self.mensajes.execute
 
+
+			
+			
+			
+    def Eliminar (self):
+
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        cursor=conecion.cursor()
+
+        rows=self.tableWidget.selectionModel().selectedRows()
+        index=[]
+
+        for i in rows:
+            index.append(i.row())
+        index.sort(reverse=True)
+        for i in index:
+            id_delate=self.tableWidget.item(i,0).text()
+            self.tableWidget.removeRow(i)
+            delate="DELAEE FROM UNIDAD WHERE ID_UNI={}".format(id_delate)
+            cursor.execute(delate)
+            conecion.commit()
+        conecion.close()
+
         
-        #Funcion que verifica si no se repite ID PK de La Tabla
+        
+    #Funcion que verifica si no se repite ID PK de La Tabla
     def exist_id(self,num_id):
         #consulta BD srvicio
         
