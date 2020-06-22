@@ -10,7 +10,7 @@
         cursor=conecion.cursor()
 
 
-        consulta= ('select ID_VIA,GASTO,PRECIO,DISTANCIA FROM VIAJE')
+        consulta= ('select ID_VIA,GASTO,PRECIO,DESCRIPCION,DISTANCIA FROM VIAJE JOIN SERVICI USING(ID_VIA)')
         datos=cursor.execute(consulta).fetchall()
         
 

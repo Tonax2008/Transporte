@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QTableWidget ,QTableWidgetItem,QErrorMessage, QMessageBox
 import cx_Oracle
-class Viajes(object):
+class Direcciones(object):
 
     #-------------------------------------------- Funcion MOVER entre Pantallas -----------------------------------------------------#
 
@@ -211,9 +211,18 @@ class Viajes(object):
         self.lineEdit_C7.setObjectName("lineEdit_C7")
 
 
-        self.lineEdit_C8 = QtWidgets.QLineEdit(Form)
+        self.lineEdit_C8 = QtWidgets.QComboBox(Form)
         self.lineEdit_C8.setGeometry(QtCore.QRect(810, 80, 81, 21))
         self.lineEdit_C8.setObjectName("lineEdit_8")
+        self.lineEdit_C8.addItem("Seleciona")
+        self.lineEdit_C8.addItem("MEXICO")
+        self.lineEdit_C8.addItem("CHIAPAS")
+        self.lineEdit_C8.addItem("MEXICO")
+        self.lineEdit_C8.addItem("MEXICO")
+        self.lineEdit_C8.addItem("MEXICO")
+        self.lineEdit_C8.addItem("MEXICO")
+        self.lineEdit_C8.addItem("MEXICO")
+        self.lineEdit_C8.addItem("MEXICO")
 
 
 
@@ -246,6 +255,29 @@ class Viajes(object):
         self.comboBox.setItemText(0,  "FIL1")
         self.comboBox.setItemText(1,  "FIL2")
         self.comboBox.setItemText(2,  "FIL3")
+
+        #DATOS DE COMBO BOX ESTADOS
+
+        ESTADOS= ('SELECT ESTADO FROM ESTADO ')
+        TABA_DATOS=cursor.execute(ESTADOS).fetchall()
+        
+
+      
+
+        #ciclo para recorrer tabla BD
+        if len (TABA_DATOS) >0:
+            fila =1
+            for p in datos:
+                columna=0
+                for c in p:
+                    celda=QTableWidgetItem(str(c))
+                    self.lineEdit_C8.addItems(celda)
+                    columna +=1
+                fila +=1
+        conecion.close()
+        
+
+
 
     def insertar(self):
 
@@ -298,7 +330,7 @@ class Viajes(object):
             self.mensajes.setText("EL ID YA EXISTE")
             self.mensajes.execute
         
-        def Eliminar (self):
+    def Eliminar (self):
 
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()

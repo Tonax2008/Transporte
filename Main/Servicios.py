@@ -70,7 +70,7 @@ class Servicios(object):
         if len (datos) >0:
             fila =1
             for p in datos:
-                columna=1
+                columna=0
                 for c in p:
                     celda=QTableWidgetItem(str(c))
                     self.tableWidget.setItem(fila,columna,celda)

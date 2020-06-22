@@ -259,9 +259,6 @@
    </property>
   </action>
   <action name="actionServicios_2">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
    <property name="text">
     <string>Servicios</string>
    </property>

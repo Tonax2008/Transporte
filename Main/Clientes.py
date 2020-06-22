@@ -50,7 +50,7 @@ class Clientes(object):
         self.tableWidget.setItem(0,0,QTableWidgetItem("CLIENTE"))
         self.tableWidget.setItem(0,1,QTableWidgetItem("RFC"))
         self.tableWidget.setItem(0,2,QTableWidgetItem("PAGINA WEB"))
-        self.tableWidget.setItem(0,3,QTableWidget("Direccion"))
+        self.tableWidget.setItem(0,3,QTableWidgetItem("Direccion"))
         
        #Conecta BD
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
@@ -105,6 +105,7 @@ class Clientes(object):
         self.BT_INSERTAR.setGeometry(QtCore.QRect(242, 12, 113, 32))
         #Nombre del objeto 
         self.BT_INSERTAR.setObjectName("BT_INSERTAR")
+        self.BT_INSERTAR.clicked.connect(self.insertar)
 
 
         #---Boton Editar---#

@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QTableWidget ,QTableWidgetItem,QErrorMessage, QMessageBox
 import cx_Oracle
-class Viajes(object):
+class Metodo(object):
 
     #-------------------------------------------- Funcion MOVER entre Pantallas -----------------------------------------------------#
 

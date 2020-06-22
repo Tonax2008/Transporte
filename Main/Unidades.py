@@ -41,7 +41,7 @@ class Unidades(object):
         #Nombre de la tablas
         self.tableWidget.setObjectName("tableWidget")
         #Columnas de la tabla
-        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setColumnCount(4)
         #fila de la tabla
         self.tableWidget.setRowCount(20)
 

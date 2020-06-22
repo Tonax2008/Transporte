@@ -1,10 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-import Viajes
-import Servicios
-import CONSULTA
-import Clientes
-import Unidades
-import Empleados
+import Servicios,Viajes,CONSULTA,Clientes,Unidades,Empleados,METODOPAGO,DIRECCION,OFICINA,CORREO
+import Repor_Pagos,REPOR_EMPLEADOS
+#REPOR_OFICINA,REPOR_SERVICIO,REPOR_VIAJES
 
 class Ui_Page2(object):
 
@@ -140,7 +137,7 @@ class Ui_Page2(object):
         icon3.addPixmap(QtGui.QPixmap("Img/pagos_icono.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionPAGOS.setIcon(icon3)
         self.actionPAGOS.setObjectName("actionPAGOS")
-        self.actionPAGOS.triggered.connect(lambda: self.openwindow(CONSULTA.PAGOS()))
+        self.actionPAGOS.triggered.connect(lambda: self.openwindow(Repor_Pagos.Reporte_pagos()))
 
         #-----Opcion Clientes---#
         self.actionCLIENTES = QtWidgets.QAction(Form)
@@ -156,7 +153,7 @@ class Ui_Page2(object):
         icon5.addPixmap(QtGui.QPixmap("Img/empleado-2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionEMPLEADOS.setIcon(icon5)
         self.actionEMPLEADOS.setObjectName("actionEMPLEADOS")
-        self.actionEMPLEADOS.triggered.connect(lambda: self.openwindow(Empleados.Empleados()))
+        self.actionEMPLEADOS.triggered.connect(lambda: self.openwindow(REPOR_EMPLEADOS.Reporte_Empleados()))
 
         #-----Opcion Unidades---#
         self.actionUNIDADES = QtWidgets.QAction(Form)
@@ -166,9 +163,7 @@ class Ui_Page2(object):
         self.actionUNIDADES.setObjectName("actionUNIDADES")
         self.actionUNIDADES.triggered.connect(lambda: self.openwindow(Unidades.Unidades()))
 
-        #-----Opcion Oficinas---#
-        self.actionOFICINAS = QtWidgets.QAction(Form)
-        self.actionOFICINAS.setObjectName("actionOFICINAS")
+      
 
         #-----Opcion Respaldos---#
         self.actionRESPALDOS = QtWidgets.QAction(Form)
@@ -196,11 +191,15 @@ class Ui_Page2(object):
         self.actionAGREGAR.setObjectName("actionAGREGAR")
 
         #-----Opcion Ediatr---#
-        self.actionEDITAR = QtWidgets.QAction(Form)
+        self.menuEDITAR = QtWidgets.QMenu(self.menuBASES_DE_DATOS)
         icon10 = QtGui.QIcon()
         icon10.addPixmap(QtGui.QPixmap("Img/lapiz.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionEDITAR.setIcon(icon10)
-        self.actionEDITAR.setObjectName("actionEDITAR")
+        self.menuEDITAR.setIcon(icon10)
+        self.menuEDITAR.setObjectName("actionEDITAR")
+
+        #Declara la parte de pagos incluyendo subpagos (SubMenu)
+        self.menuPagos = QtWidgets.QMenu(self.menuEDITAR)
+        self.menuPagos.setObjectName("menuPagos")
 
         #-----Opcion Eliminar---#
         self.actionELIMINAR = QtWidgets.QAction(Form)
@@ -208,6 +207,55 @@ class Ui_Page2(object):
         icon11.addPixmap(QtGui.QPixmap("Img/salida.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionELIMINAR.setIcon(icon11)
         self.actionELIMINAR.setObjectName("actionELIMINAR")
+
+        #submenu de editar
+        self.actionServicios_2 = QtWidgets.QAction(Form)
+        self.actionServicios_2.setObjectName("actionServicios_2")
+
+        #Submenu Metodo de pago
+        self.actionMetodo_de_Pago = QtWidgets.QAction(Form)
+        self.actionMetodo_de_Pago.setObjectName("actionMetodo_de_Pago")
+
+
+        self.actionServicios_2 = QtWidgets.QAction(Form)
+        self.actionServicios_2.setObjectName("actionServicios_2")
+        self.actionServicios_2.triggered.connect(lambda: self.openwindow(Servicios.Servicios()))
+        
+
+        self.actionCliente = QtWidgets.QAction(Form)
+        self.actionCliente.setObjectName("actionCliente")
+        self.actionCliente.triggered.connect(lambda: self.openwindow(Clientes.Clientes()))
+        
+
+        self.actionEmpleados = QtWidgets.QAction(Form)
+        self.actionEmpleados.setObjectName("actionEmpleados")
+        self.actionEmpleados.triggered.connect(lambda: self.openwindow(Empleados.Empleados()))
+
+        self.actionViajes = QtWidgets.QAction(Form)
+        self.actionViajes.setObjectName("actionViajes")
+        self.actionVIAJES.triggered.connect(lambda: self.openwindow(Viajes.Viajes()))
+
+        self.actionDireccion = QtWidgets.QAction(Form)
+        self.actionDireccion.setObjectName("actionDireccion")
+        self.actionDireccion.triggered.connect(lambda: self.openwindow(DIRECCION.Direcciones()))
+
+        self.actionOficina = QtWidgets.QAction(Form)
+        self.actionOficina.setObjectName("actionOficina")
+        self.actionOficina.triggered.connect(lambda: self.openwindow(OFICINA.Oficina()))
+
+        self.actionUnidad = QtWidgets.QAction(Form)
+        self.actionUnidad.setObjectName("actionUnidad")
+        self.actionUnidad.triggered.connect(lambda: self.openwindow(Unidades.Unidades()))
+
+        self.actionMetodo_de_Pago = QtWidgets.QAction(Form)
+        self.actionMetodo_de_Pago.setObjectName("actionMetodo_de_Pago")
+        self.actionMetodo_de_Pago.triggered.connect(lambda: self.openwindow(METODOPAGO.Metodo()))
+
+        self.actionCorreos = QtWidgets.QAction(Form)
+        self.actionCorreos.setObjectName("actionCorreos")
+        self.actionCorreos.triggered.connect(lambda: self.openwindow(CORREO.Correo()))
+
+        
 
         #-----Opcion ¿?---#
         self.action = QtWidgets.QAction(Form)
@@ -224,9 +272,22 @@ class Ui_Page2(object):
         self.menuTABLAS.addAction(self.actionCLIENTES)
         self.menuTABLAS.addAction(self.actionEMPLEADOS)
         self.menuTABLAS.addAction(self.actionUNIDADES)
-        self.menuTABLAS.addAction(self.actionOFICINAS)
-        self.menuBASES_DE_DATOS.addAction(self.actionEDITAR)
+        self.menuTABLAS.addAction(self.actionOficina)
+        self.menuBASES_DE_DATOS.addAction(self.menuEDITAR.menuAction())
         self.menuBASES_DE_DATOS.addSeparator()
+
+        #Ventana de editar todas las tablas para consulta
+        self.menuPagos.addAction(self.actionMetodo_de_Pago)
+        self.menuEDITAR.addAction(self.actionServicios_2)
+        self.menuEDITAR.addAction(self.actionCliente)
+        self.menuEDITAR.addAction(self.menuPagos.menuAction())
+        self.menuEDITAR.addAction(self.actionEmpleados)
+        self.menuEDITAR.addAction(self.actionViajes)
+        self.menuEDITAR.addAction(self.actionDireccion)
+        self.menuEDITAR.addAction(self.actionOficina)
+        self.menuEDITAR.addAction(self.actionUnidad)
+        self.menuEDITAR.addAction(self.actionCorreos)
+
         self.menuBASES_DE_DATOS.addAction(self.actionAGREGAR)
         self.menuBASES_DE_DATOS.addAction(self.actionELIMINAR)
         self.menuBASES_DE_DATOS.addSeparator()
@@ -243,6 +304,8 @@ class Ui_Page2(object):
         self.toolBar.addAction(self.actionEMPLEADOS)
         self.toolBar.addAction(self.actionAGREGAR)
 
+
+
         #mete textos  en los obejtos , muestra en la interfaz
         self.retranslateUi(Form)
         #Conecta los textos con botones
@@ -255,7 +318,7 @@ class Ui_Page2(object):
         Form.setWindowTitle(_translate("Form", "MainWindow"))
         self.menu.setTitle(_translate("Form", "."))
         self.menuUSUARIOS.setTitle(_translate("Form", "USUARIOS"))
-        self.menuTABLAS.setTitle(_translate("Form", "TABLAS"))
+        self.menuTABLAS.setTitle(_translate("Form", "CONSULTAS"))
         self.menuBASES_DE_DATOS.setTitle(_translate("Form", "BASES DE DATOS"))
         self.menuAYUDA.setTitle(_translate("Form", "AYUDA"))
         self.toolBar.setWindowTitle(_translate("Form", "toolBar"))
@@ -268,14 +331,24 @@ class Ui_Page2(object):
         self.actionCLIENTES.setText(_translate("Form", "CLIENTES"))
         self.actionEMPLEADOS.setText(_translate("Form", "EMPLEADOS"))
         self.actionUNIDADES.setText(_translate("Form", "UNIDADES"))
-        self.actionOFICINAS.setText(_translate("Form", "OFICINAS"))
+        
         self.actionRESPALDOS.setText(_translate("Form", "RESPALDOS"))
         self.actionTUTORIAL.setText(_translate("Form", "TUTORIAL"))
         self.actionInicio.setText(_translate("Form", "INICIO"))
         self.actionAGREGAR.setText(_translate("Form", "AGREGAR"))
-        self.actionEDITAR.setText(_translate("Form", "EDITAR "))
+        #self.menuEDITAR.setText(_translate("Form", "EDITAR "))
         self.actionELIMINAR.setText(_translate("Form", "ELIMINAR"))
         self.action.setText(_translate("Form", "?"))
+
+        self.actionServicios_2.setText(_translate("Principal", "Servicios"))
+        self.actionCliente.setText(_translate("Principal", "Cliente"))
+        self.actionEmpleados.setText(_translate("Principal", "Empleados"))
+        self.actionViajes.setText(_translate("Principal", "Viajes"))
+        self.actionDireccion.setText(_translate("Principal", "Direccion"))
+        self.actionOficina.setText(_translate("Principal", "Oficina"))
+        self.actionUnidad.setText(_translate("Principal", "Unidad"))
+        self.actionMetodo_de_Pago.setText(_translate("Principal", "Metodo de Pago"))
+        self.actionCorreos.setText(_translate("Principal", "Correos"))
 
     #---------------------------------------------------- Funcion Boton Regresar--------------------------------------------------------------------------#    
 

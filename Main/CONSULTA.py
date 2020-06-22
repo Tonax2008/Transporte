@@ -102,6 +102,7 @@ class PAGOS (object):
         self.BT_ELIMINAR = QtWidgets.QPushButton(Form)
         self.BT_ELIMINAR.setGeometry(QtCore.QRect(710, 10, 113, 32))
         self.BT_ELIMINAR.setObjectName("BT_ELIMINAR")
+        self.BT_ELIMINAR.clicked.connect(self.Eliminar)
 
         #---Boton Regresar---#
 
@@ -128,6 +129,7 @@ class PAGOS (object):
         self.CAMPO_3 = QtWidgets.QLabel(Form)
         self.CAMPO_3.setGeometry(QtCore.QRect(330, 60, 71, 16))
         self.CAMPO_3.setObjectName("CAMPO_3")
+        
 
 
         self.CAMPO4 = QtWidgets.QLabel(Form)
@@ -165,9 +167,18 @@ class PAGOS (object):
 
 
 
-        self.lineEdit_C3 = QtWidgets.QLineEdit(Form)
+        self.lineEdit_C3 = QtWidgets.QComboBox(Form)
         self.lineEdit_C3.setGeometry(QtCore.QRect(320, 80, 81, 21))
         self.lineEdit_C3.setObjectName("lineEdit_C3")
+
+        self.lineEdit_C3.addItem("")
+        self.lineEdit_C3.addItem("")
+        self.lineEdit_C3.addItem("")
+        self.lineEdit_C3.addItem("")
+        self.lineEdit_C3.addItem("")
+        self.lineEdit_C3.addItem("")
+        self.lineEdit_C3.addItem("")
+
 
         self.lineEdit_C4 = QtWidgets.QLineEdit(Form)
         self.lineEdit_C4.setGeometry(QtCore.QRect(410, 80, 81, 21))
@@ -202,6 +213,14 @@ class PAGOS (object):
         self.CAMPO_3.setText( "METODO")
         self.CAMPO4.setText( "MONTO")
         self.CAMPO_5.setText( "CLIENTE")
+
+        self.lineEdit_C3.setItemText(0,"Seleccionar")
+        self.lineEdit_C3.setItemText(1,"Efectivo")
+        self.lineEdit_C3.setItemText(2,"Transferencia")
+        self.lineEdit_C3.setItemText(3,"Deposito")
+        self.lineEdit_C3.setItemText(4,"Cheque")
+        self.lineEdit_C3.setItemText(5,"Criptomoneda")
+
         
         self.comboBox.setItemText(0,  "FIL1")
         self.comboBox.setItemText(1,  "FIL2")
@@ -210,27 +229,29 @@ class PAGOS (object):
     def insertar(self):
 
 
+        #Pasa valores de los Text Edit 
         valor_id=self.lineEdit_C1.text().strip()
         fecha=self.lineEdit_C2.text().strip()
         bus_met=self.lineEdit_C3.text().strip()
         monto=self.lineEdit_C4.text().strip()
-        bus_clie=self.lineEdit_C5.text().strip()
+        bus_clie=self.lineEdit_C5.text().strip()    
+        #Toma el valor del ComboBox en int segun cordenadas de la posicion
+        metodo= self.lineEdit_C3.currentIndex()
 
-        
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()
 
 
-        busqueda_1=("Select id_met from metodo_pago  where METODO= '{}'".format(bus_met))
-        resultado_1=cursor.execute(busqueda_1).fetchall()
+        #busqueda_1=("Select id_met from metodo_pago  where METODO= '{}'".format(bus_met))
+        #resultado_1=cursor.execute(busqueda_1).fetchall()
 
         busqueda_2=("Select id_cli from cliente  where RAZ_SOC= '{}'".format(bus_clie))
         resultado_2=cursor.execute(busqueda_2).fetchall()
 
         #print(resultado_1)
-        metod=[x[0] for x in resultado_1]
+        #metod=[x[0] for x in resultado_1]
         #print(metod)
-        t_metod=(metod[0])
+        #t_metod=(metod[0])
         #print(m_metod)
 
         cliente=[x[0]for x in resultado_2]
@@ -239,27 +260,41 @@ class PAGOS (object):
 
        
         
-        idmet=int(t_metod)
+        #idmet=int(t_metod)
         #print(idmet)        
         cliente_id=t_cliente
 
-
-       
-
-
-
         if not self.exist_id(valor_id):
             
-            insert=("Insert into PAGO VALUES( {} ,'{}' ,{} ,{},{}) ".format(valor_id,fecha,idmet,monto,cliente_id))
+            insert=("Insert into PAGO VALUES( {} ,'{}' ,{} ,{},{}) ".format(valor_id,fecha,metodo,monto,cliente_id))
             print(insert)
 
-            
             cursor.execute(insert)
             conecion.commit()
+            conecion.close()
         
         else:
             self.mensajes.setText("EL ID YA EXISTE")
             self.mensajes.execute
+    
+    def Eliminar (self):
+
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        cursor=conecion.cursor()
+
+        rows=self.tableWidget.selectionModel().selectedRows()
+        index=[]
+
+        for i in rows:
+            index.append(i.row())
+        index.sort(reverse=True)
+        for i in index:
+            id_delate=self.tableWidget.item(i,0).text()
+            self.tableWidget.removeRow(i)
+            delate="DELAEE FROM UNIDAD PAGO ID_PAGO={}".format(id_delate)
+            cursor.execute(delate)
+            conecion.commit()
+        conecion.close()
 
         
     def exist_id(self,num_id):
@@ -271,4 +306,4 @@ class PAGOS (object):
         resultado=cursor.execute(verific).fetchall()
 
         return len(resultado) >0
- 
+
