@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import Servicios,Viajes,CONSULTA,Clientes,Unidades,Empleados,METODOPAGO,DIRECCION,OFICINA,CORREO
-import Repor_Pagos,REPOR_EMPLEADOS
+import Repor_Pagos,REPOR_EMPLEADOS,REPOR_SERVICIO
 #REPOR_OFICINA,REPOR_SERVICIO,REPOR_VIAJES
 
 class Ui_Page2(object):
@@ -121,7 +121,7 @@ class Ui_Page2(object):
         self.actionServicios.setIcon(icon1)
         self.actionServicios.setObjectName("actionServicios")
         #enlaza ventanas importadas
-        self.actionServicios.triggered.connect(lambda: self.openServicios())
+        self.actionServicios.triggered.connect(lambda: self.openwindow(REPOR_SERVICIO.Reporte_Servicios()))
 
         #-----Opcion Viajes---#
         self.actionVIAJES = QtWidgets.QAction(Form)
@@ -251,6 +251,11 @@ class Ui_Page2(object):
         self.actionMetodo_de_Pago.setObjectName("actionMetodo_de_Pago")
         self.actionMetodo_de_Pago.triggered.connect(lambda: self.openwindow(METODOPAGO.Metodo()))
 
+        self.actionTabalasPAGOS =QtWidgets.QAction(Form)
+        self.actionTabalasPAGOS.setObjectName("Tabla de Pagos")
+        self.actionTabalasPAGOS.triggered.connect(lambda: self.openwindow(CONSULTA.PAGOS()))
+
+
         self.actionCorreos = QtWidgets.QAction(Form)
         self.actionCorreos.setObjectName("actionCorreos")
         self.actionCorreos.triggered.connect(lambda: self.openwindow(CORREO.Correo()))
@@ -278,6 +283,7 @@ class Ui_Page2(object):
 
         #Ventana de editar todas las tablas para consulta
         self.menuPagos.addAction(self.actionMetodo_de_Pago)
+        self.menuPagos.addAction(self.actionTabalasPAGOS)
         self.menuEDITAR.addAction(self.actionServicios_2)
         self.menuEDITAR.addAction(self.actionCliente)
         self.menuEDITAR.addAction(self.menuPagos.menuAction())
@@ -348,6 +354,7 @@ class Ui_Page2(object):
         self.actionOficina.setText(_translate("Principal", "Oficina"))
         self.actionUnidad.setText(_translate("Principal", "Unidad"))
         self.actionMetodo_de_Pago.setText(_translate("Principal", "Metodo de Pago"))
+        self.actionTabalasPAGOS.setText(_translate("Principal","PAGOS"))
         self.actionCorreos.setText(_translate("Principal", "Correos"))
 
     #---------------------------------------------------- Funcion Boton Regresar--------------------------------------------------------------------------#    

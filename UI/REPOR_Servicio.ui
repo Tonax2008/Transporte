@@ -220,8 +220,8 @@
     <property name="geometry">
      <rect>
       <x>590</x>
-      <y>320</y>
-      <width>60</width>
+      <y>330</y>
+      <width>151</width>
       <height>16</height>
      </rect>
     </property>

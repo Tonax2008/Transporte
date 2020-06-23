@@ -117,7 +117,7 @@ class Reporte_pagos(object):
         
 
         consulta_name= ('SELECT RAZ_SOC FROM PAGO JOIN CLIENTE USING(ID_CLI) WHERE ID_PAGO = {}'.format(id_pago))
-        print(consulta_name)
+        #print(consulta_name)
         datos=cursor.execute(consulta_name).fetchall()
 
         tupla_cliente=[x[0]for x in datos]
@@ -142,13 +142,10 @@ class Reporte_pagos(object):
         metodo=(tupla_metodo[0])
         self.lineEdit_metodo.setText(str(metodo.upper()))
 
-        print(str(cliente))
-        print(monto)
+        #print(str(cliente))
+        #print(monto)
 
 
-
-
-        pass
 
     
 
