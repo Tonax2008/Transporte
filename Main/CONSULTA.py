@@ -96,6 +96,7 @@ class PAGOS (object):
         self.BT_EDITAR = QtWidgets.QPushButton(Form)
         self.BT_EDITAR.setGeometry(QtCore.QRect(127, 12, 113, 32))
         self.BT_EDITAR.setObjectName("BT_EDITAR")
+        self.BT_EDITAR.clicked.connect(self.update)
 
         #---Boton ELIMINAR---#
 
@@ -232,7 +233,6 @@ class PAGOS (object):
         #Pasa valores de los Text Edit 
         valor_id=self.lineEdit_C1.text().strip()
         fecha=self.lineEdit_C2.text().strip()
-        bus_met=self.lineEdit_C3.text().strip()
         monto=self.lineEdit_C4.text().strip()
         bus_clie=self.lineEdit_C5.text().strip()    
         #Toma el valor del ComboBox en int segun cordenadas de la posicion
@@ -257,8 +257,6 @@ class PAGOS (object):
         cliente=[x[0]for x in resultado_2]
         t_cliente=(cliente[0])
 
-
-       
         
         #idmet=int(t_metod)
         #print(idmet)        
@@ -268,7 +266,6 @@ class PAGOS (object):
             
             insert=("Insert into PAGO VALUES( {} ,'{}' ,{} ,{},{}) ".format(valor_id,fecha,metodo,monto,cliente_id))
             print(insert)
-
             cursor.execute(insert)
             conecion.commit()
             conecion.close()
@@ -284,17 +281,50 @@ class PAGOS (object):
 
         rows=self.tableWidget.selectionModel().selectedRows()
         index=[]
-
+        
         for i in rows:
             index.append(i.row())
         index.sort(reverse=True)
         for i in index:
             id_delate=self.tableWidget.item(i,0).text()
             self.tableWidget.removeRow(i)
-            delate="DELAEE FROM UNIDAD PAGO ID_PAGO={}".format(id_delate)
+            delate=("DELETE FROM PAGO WHERE PAGO ID_PAGO={}".format(id_delate))
+            print(delate)
             cursor.execute(delate)
             conecion.commit()
         conecion.close()
+
+    def update (self):
+
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        cursor=conecion.cursor()
+
+        rows=self.tableWidget.selectionModel().selectedRows()
+        index=[]
+        
+        for i in rows:
+            index.append(i.row())
+        index.sort(reverse=True)
+
+        for i in index:
+            id_pago=self.tableWidget.item(i,0).text()
+            id_delate=self.tableWidget.item(i,1).text()
+            print(id_delate)
+            id_2=self.tableWidget.item(i,2).text()
+            print(id_2)
+            id_3=self.tableWidget.item(i,3).text()
+            print(id_3)
+            id_4=self.tableWidget.item(i,4).text()
+            print(id_4)
+
+            #self.tableWidget.removeRow(i)
+            update=("UPDATE  PAGO SET ID_MET={},MONTO={},ID_CLI={} WHERE ID_PAGO={}".format(id_2,id_3,id_4,id_pago))
+            print(update)
+            cursor.execute(update)
+            conecion.commit()
+        conecion.close()
+
+
 
         
     def exist_id(self,num_id):
@@ -306,4 +336,6 @@ class PAGOS (object):
         resultado=cursor.execute(verific).fetchall()
 
         return len(resultado) >0
+    
+    
 

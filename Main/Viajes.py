@@ -91,6 +91,7 @@ class Viajes(object):
         self.BT_EDITAR = QtWidgets.QPushButton(Form)
         self.BT_EDITAR.setGeometry(QtCore.QRect(127, 12, 113, 32))
         self.BT_EDITAR.setObjectName("BT_EDITAR")
+        self.BT_EDITAR.clicked.connect(self.update)
 
         #---Boton ELIMINAR---#
 
@@ -195,7 +196,6 @@ class Viajes(object):
         self.CAMPO_3.setText( "PRECIO")
         self.CAMPO4.setText( "DIRECCION")
         self.CAMPO_5.setText( "DISTANCIA")
-        
         self.comboBox.setItemText(0,  "FIL1")
         self.comboBox.setItemText(1,  "FIL2")
         self.comboBox.setItemText(2,  "FIL3")
@@ -208,15 +208,8 @@ class Viajes(object):
         li_PRECIO=self.lineEdit_C3.text().strip()
         li_DIRE=self.lineEdit_C4.text().strip()
         li_DISTANCIA=self.lineEdit_C5.text().strip()
-      
-
-        
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()
-
-       
-
-
 
         if not self.exist_id(li_id):
             
@@ -230,6 +223,36 @@ class Viajes(object):
         else:
             self.mensajes.setText("EL ID YA EXISTE")
             self.mensajes.execute
+    def update (self):
+
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        cursor=conecion.cursor()
+
+        rows=self.tableWidget.selectionModel().selectedRows()
+        index=[]
+        
+        for i in rows:
+            index.append(i.row())
+        index.sort(reverse=True)
+
+        for i in index:
+            id_emp=self.tableWidget.item(i,0).text()
+            id_1=self.tableWidget.item(i,1).text()
+            print(id_1)
+            id_2=self.tableWidget.item(i,2).text()
+            print(id_2)
+            id_3=self.tableWidget.item(i,3).text()
+            print(id_3)
+            id_4=self.tableWidget.item(i,4).text()
+            print(id_4)
+            
+           
+            #self.tableWidget.removeRow(i)
+            update=("UPDATE  VIAJE SET GASTO={},PRECIO={},DISTANCIA={},ID_DIR={} WHERE ID_VIA={}".format(id_1,id_2,id_3,id_4, id_emp))
+            print(update)
+            cursor.execute(update)
+            conecion.commit()
+        conecion.close()
     
     def Eliminar (self):
 
@@ -245,7 +268,7 @@ class Viajes(object):
         for i in index:
             id_delate=self.tableWidget.item(i,0).text()
             self.tableWidget.removeRow(i)
-            delate="DELAEE FROM VIAJE WHERE ID_VIA={}".format(id_delate)
+            delate="DELETE FROM VIAJE WHERE ID_VIA={}".format(id_delate)
             cursor.execute(delate)
             conecion.commit()
         conecion.close()

@@ -93,6 +93,7 @@ class Metodo(object):
         self.BT_EDITAR = QtWidgets.QPushButton(Form)
         self.BT_EDITAR.setGeometry(QtCore.QRect(127, 12, 113, 32))
         self.BT_EDITAR.setObjectName("BT_EDITAR")
+        self.BT_EDITAR.clicked.connect(self.update)
 
         #---Boton ELIMINAR---#
 
@@ -203,6 +204,31 @@ class Metodo(object):
         else:
             self.mensajes.setText("EL ID YA EXISTE")
             self.mensajes.execute
+        
+    def update (self):
+
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        cursor=conecion.cursor()
+
+        rows=self.tableWidget.selectionModel().selectedRows()
+        index=[]
+        
+        for i in rows:
+            index.append(i.row())
+        index.sort(reverse=True)
+
+        for i in index:
+            id_emp=self.tableWidget.item(i,0).text()
+            id_1=self.tableWidget.item(i,1).text()
+            print(id_1)
+           
+           
+            #self.tableWidget.removeRow(i)
+            update=("UPDATE  METODO_PAGO SET METODO='{}'  WHERE ID_MET={}".format(id_1, id_emp))
+            print(update)
+            cursor.execute(update)
+            conecion.commit()
+        conecion.close()
     
     def Eliminar (self):
 
@@ -218,7 +244,7 @@ class Metodo(object):
         for i in index:
             id_delate=self.tableWidget.item(i,0).text()
             self.tableWidget.removeRow(i)
-            delate="DELAEE FROM METODO_PAGO WHERE ID_MET={}".format(id_delate)
+            delate="DELETE FROM METODO_PAGO WHERE ID_MET={}".format(id_delate)
             cursor.execute(delate)
             conecion.commit()
         conecion.close()

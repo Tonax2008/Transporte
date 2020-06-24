@@ -94,6 +94,7 @@ class Servicios(object):
         self.BT_EDITAR = QtWidgets.QPushButton(Form)
         self.BT_EDITAR.setGeometry(QtCore.QRect(127, 12, 113, 32))
         self.BT_EDITAR.setObjectName("BT_EDITAR")
+        self.BT_EDITAR.clicked.connect(self.update)
 
         #---Boton ELIMINAR---#
 
@@ -251,27 +252,6 @@ class Servicios(object):
         conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
         cursor=conecion.cursor()
 
-        #Busca el id en la tabla correo  que corresponda al correo ingresado
-        busqueda_1=("Select id_cor from CORREO  where METODO= '{}'".format(li_idcor))
-        resultado_1=cursor.execute(busqueda_1).fetchall()
-
-        #Busca el id en la tabla clientes con el cliente que corresponda
-        busqueda_2=("Select id_cli from cliente  where RAZ_SOC= '{}'".format(li_iddir))
-        resultado_2=cursor.execute(busqueda_2).fetchall()
-
-        #Convierte la tupla lista tomada de la BD a una lista
-        #print(resultado_1)
-        id_1=[x[0] for x in resultado_1]
-        #print(metod)
-        #Selecciona el primer valor de la lista para pasarlo a la consulta en insert
-        t_id1=(id_1[0])
-        #print(m_metod)
-
-        id_2=[x[0]for x in resultado_2]
-        t_id2=(id_2[0])
-
-
-
         if not self.exist_id(li_id):
             
             insert=("Insert into SERVICIO VALUES( {} ,'{}' ,'{}' ,{},{},{},{},{},{}) ".format(li_id,li_FECHA,li_DESCR,li_IDVIA,li_IDPAGO,li_IDUNI,li_IDEMP,li_IDCLI))
@@ -283,6 +263,38 @@ class Servicios(object):
         else:
             self.mensajes.setText("EL ID YA EXISTE")
             self.mensajes.execute
+    
+    def update (self):
+
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        cursor=conecion.cursor()
+
+        rows=self.tableWidget.selectionModel().selectedRows()
+        index=[]
+        
+        for i in rows:
+            index.append(i.row())
+        index.sort(reverse=True)
+
+        for i in index:
+            id_ser=self.tableWidget.item(i,0).text()
+            id_1=self.tableWidget.item(i,1).text()
+            id_2=self.tableWidget.item(i,2).text()           
+            id_3=self.tableWidget.item(i,3).text()
+            id_4=self.tableWidget.item(i,4).text()
+            id_5=self.tableWidget.item(i,5).text()
+            id_5=self.tableWidget.item(i,6).text()
+            id_6=self.tableWidget.item(i,7).text()
+            id_7=self.tableWidget.item(i,8).text()
+            
+            
+           
+            #self.tableWidget.removeRow(i)
+            update=("UPDATE  SERICIO SET FECHA={},DESCRIPCION='{}',ID_VIA={},ID_PAGO={},ID_UNI={},ID_EMP={},ID_CLI={} WHERE ID_SER={}".format(id_1,id_2,id_3,id_4,id_5,id_6,id_7, id_ser))
+            print(update)
+            cursor.execute(update)
+            conecion.commit()
+        conecion.close()
 
     def Eliminar (self):
 
@@ -298,7 +310,7 @@ class Servicios(object):
         for i in index:
             id_delate=self.tableWidget.item(i,0).text()
             self.tableWidget.removeRow(i)
-            delate="DELAEE FROM SERVICIO WHERE ID_SER={}".format(id_delate)
+            delate="DELETE FROM SERVICIO WHERE ID_SER={}".format(id_delate)
             cursor.execute(delate)
             conecion.commit()
         conecion.close()

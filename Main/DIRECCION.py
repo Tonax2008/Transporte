@@ -104,6 +104,7 @@ class Direcciones(object):
         self.BT_EDITAR = QtWidgets.QPushButton(Form)
         self.BT_EDITAR.setGeometry(QtCore.QRect(127, 12, 113, 32))
         self.BT_EDITAR.setObjectName("BT_EDITAR")
+        self.BT_EDITAR.clicked.connect(self.update)
 
         #---Boton ELIMINAR---#
 
@@ -310,10 +311,6 @@ class Direcciones(object):
         t_metod=(metod[0])
         
         idmet=int(t_metod)
-             
-       
-
-       
 
 
         #VERIFICA QUE NO EXISTA UN ID PK REPETIDO ANTES DE INSERTAR
@@ -329,6 +326,45 @@ class Direcciones(object):
         else:
             self.mensajes.setText("EL ID YA EXISTE")
             self.mensajes.execute
+
+    def update (self):
+
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+        cursor=conecion.cursor()
+
+        rows=self.tableWidget.selectionModel().selectedRows()
+        index=[]
+        
+        for i in rows:
+            index.append(i.row())
+        index.sort(reverse=True)
+
+        for i in index:
+            id_DIR=self.tableWidget.item(i,0).text()
+            id_1=self.tableWidget.item(i,1).text()
+            print(id_1)
+            id_2=self.tableWidget.item(i,2).text()
+            print(id_2)
+            id_3=self.tableWidget.item(i,3).text()
+            print(id_3)
+            id_4=self.tableWidget.item(i,4).text()
+            print(id_4)
+            id_5=self.tableWidget.item(i,5).text()
+            print(id_5)
+            id_5=self.tableWidget.item(i,6).text()
+            print(id_5)
+            id_6=self.tableWidget.item(i,7).text()
+            print(id_6)
+            id_7=self.tableWidget.item(i,8).text()
+            print(id_7)
+         
+           
+            #self.tableWidget.removeRow(i)
+            update=("UPDATE  DIRECCION SET CALLE='{}',COLONIA='{}',CP={},DELEGACION='{}',NO_INT={},NO_EXT={},ID_EST={} WHERE ID_DIR={}".format(id_1,id_2,id_3,id_4,id_5,id_6,id_7, id_DIR))
+            print(update)
+            cursor.execute(update)
+            conecion.commit()
+        conecion.close()
         
     def Eliminar (self):
 
@@ -344,7 +380,7 @@ class Direcciones(object):
         for i in index:
             id_delate=self.tableWidget.item(i,0).text()
             self.tableWidget.removeRow(i)
-            delate="DELAEE FROM DIRECCION WHERE ID_DIR={}".format(id_delate)
+            delate="DELETE FROM DIRECCION WHERE ID_DIR={}".format(id_delate)
             cursor.execute(delate)
             conecion.commit()
         conecion.close()
