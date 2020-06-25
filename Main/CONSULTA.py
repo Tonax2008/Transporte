@@ -341,67 +341,68 @@ class PAGOS (object):
                 self.mensajes.setIcon(QMessageBox.Critical)                                         #icono de la ventana emrgene
                 self.mensajes.setDetailedText("SELECCIONE TODA LA FILA"+ '\n' + "ACTUALICE LA TABLA")
                 self.mensajes.exec_()                                                               #Ejecuta ventana emrgente
-           
+    
+    #Funcion de actualizar datos
 
     def update (self):
 
         try:
 
-            conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
-            cursor=conecion.cursor()
-        except Exception as err:
+            conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")            #Crea una conecion con la BD
+            cursor=conecion.cursor()                                                        #Ejecuta la coneccion
+        except Exception as err:                                                            #Exepcion si no se logra la correcion
 
-            self.mensajes.setText("ERROR DE CONECCION")
-            self.mensajes.setIcon(QMessageBox.Warning)
-            self.mensajes.exec_()
+            self.mensajes.setText("ERROR DE CONECCION")                                     #Error de la ventana emergente
+            self.mensajes.setIcon(QMessageBox.Warning)                                      #Icono de la ventana emergente
+            self.mensajes.exec_()                                                           #Ejecuta la ventana
 
         else:
 
             try:
-                rows=self.tableWidget.selectionModel().selectedRows()
-                index=[]
-                for i in rows:
-                    index.append(i.row())
-                index.sort(reverse=True)
+                rows=self.tableWidget.selectionModel().selectedRows()                       #Toma los valores de la fila seleccionada en tupla
+                index=[]                                                                    #Crea un vector
+                for i in rows:                                                              #Recorre la tupla
+                    index.append(i.row())                                                   #Sca los valores de la tupla en lista
+                index.sort(reverse=True)                                
 
                 for i in index:
                     #TOma el valor de toda la fula y lo divide para poder volver a ingresar en el update
-                    id_pago=self.tableWidget.item(i,0).text()
-                    id_delate=self.tableWidget.item(i,1).text()
+                    id_pago=self.tableWidget.item(i,0).text()                        #Toma el valor de la lista en la posicion  asignada y lo guarda para despues volver a cargar
+                    id_delate=self.tableWidget.item(i,1).text()                           #Toma el valor de la lista en la posicion  asignada y lo guarda para despues volver a cargar
                     print(id_delate)
-                    id_2=self.tableWidget.item(i,2).text()
+                    id_2=self.tableWidget.item(i,2).text()                           #Toma el valor de la lista en la posicion  asignada y lo guarda para despues volver a cargar
                     print(id_2)
-                    id_3=self.tableWidget.item(i,3).text()
+                    id_3=self.tableWidget.item(i,3).text()                           #Toma el valor de la lista en la posicion  asignada y lo guarda para despues volver a cargar
                     print(id_3)
-                    id_4=self.tableWidget.item(i,4).text()
+                    id_4=self.tableWidget.item(i,4).text()                           #Toma el valor de la lista en la posicion  asignada y lo guarda para despues volver a cargar
                     print(id_4)
 
                     #self.tableWidget.removeRow(i)
-                    update=("UPDATE  PAGO SET ID_MET={},MONTO={},ID_CLI={} WHERE ID_PAGO={}".format(id_2,id_3,id_4,id_pago))
+                    update=("UPDATE  PAGO SET ID_MET={},MONTO={},ID_CLI={} WHERE ID_PAGO={}".format(id_2,id_3,id_4,id_pago))    #Crea una comandosql para ingresar los valores 
                     print(update)
-                    cursor.execute(update)
-                    conecion.commit()
-            except Exception as err:
+                    cursor.execute(update)                                          #Ejecuta el update
+                    conecion.commit()                                               #Ejecuta un commit en la bd
+            except Exception as err:                                                #Ecepxction al momento de ejecutar update en la BD
 
-                self.mensajes.setText("ERROR AL ALTERAR LA TABLA")
-                self.mensajes.setIcon(QMessageBox.Critical)
-                self.mensajes.setDetailedText("Ingrese un dato numerico en el campo id a modificar")
-                self.mensajes.setStandardButtons(QMessageBox.Retry|QMessageBox.Cancel)
-                self.mensajes.exec_()
+                self.mensajes.setText("ERROR AL ALTERAR LA TABLA")                  #Mensaje en la ventana emergente
+                self.mensajes.setIcon(QMessageBox.Critical)                         #Icono en la ventana emergente
+                self.mensajes.setDetailedText("Ingrese un dato numerico en el campo id a modificar")    #Dettales d ela ventana emergente
+                self.mensajes.setStandardButtons(QMessageBox.Retry|QMessageBox.Cancel)  #Botnoes adicionales en la venatan emergente
+                self.mensajes.exec_()                                               #Ejectua la ventana emergenre
             finally:
-                conecion.close()
+                conecion.close()                                                    #Termina coneccion con la BD
 
 
     #FUnicon id duplicado        
     def exist_id(self,num_id):
         #consulta BD srvicio
         
-        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
-        verific=('select id_met FROM PAGO WHERE ID_PAGO={} '.format(num_id))
-        cursor=conecion.cursor()
-        resultado=cursor.execute(verific).fetchall()
+        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")        #Crea una coneccion con la bd
+        verific=('select id_met FROM PAGO WHERE ID_PAGO={} '.format(num_id))        #Consulta si eciste un id similar
+        cursor=conecion.cursor()                                                    #Ejecuta coneccion
+        resultado=cursor.execute(verific).fetchall()                                #ejectua la consulta y regresa todos los valores ne tupla
 
-        return len(resultado) >0
+        return len(resultado) >0                                                    #Retorna la canitdad de caracteres regresado , solo si es mayor que 0
     
     
 

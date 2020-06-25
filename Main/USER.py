@@ -82,7 +82,7 @@ class Ui_Form(object):
         val_pass = self.txt_input_password.text()
         val_username = self.txt_input_username.text()
 
-        if val_pass == "admin" and val_username == "admin":
+        if val_pass == "admin" and val_username == "admin":     #Verifica si los datos son correctos
             print("welcome")
             print(self.radioButton.text())
             self.openwindow()
