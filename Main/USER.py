@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QErrorMessage ,QMessageBox
 import VENPRIN
 
 
@@ -25,6 +26,8 @@ class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(734, 428)
+
+        self.mensajes= QMessageBox()
 
         #Texto Usuario
         self.label_username = QtWidgets.QLabel(Form)
@@ -74,7 +77,7 @@ class Ui_Form(object):
 
         self.btn_submit.clicked.connect(self.btn_submit_handler)
 
-
+    # Verifica Usser y Password
     def btn_submit_handler(self):
         val_pass = self.txt_input_password.text()
         val_username = self.txt_input_username.text()
@@ -82,10 +85,13 @@ class Ui_Form(object):
         if val_pass == "admin" and val_username == "admin":
             print("welcome")
             print(self.radioButton.text())
-
-
-
             self.openwindow()
+        else:
+            self.mensajes.setWindowTitle("HOLA ME VES SOY UN TITULO")
+            self.mensajes.setText("Usuario o Password incorrecto")
+            self.mensajes.setIcon(QMessageBox.Warning)
+            self.mensajes.setStandardButtons(QMessageBox.Retry|QMessageBox.Cancel)
+            self.mensajes.exec_()
 
 
 

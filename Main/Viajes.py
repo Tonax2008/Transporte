@@ -3,18 +3,6 @@ from PyQt5.QtWidgets import QTableWidget ,QTableWidgetItem,QErrorMessage, QMessa
 import cx_Oracle
 class Viajes(object):
 
-    #-------------------------------------------- Funcion MOVER entre Pantallas -----------------------------------------------------#
-
-    def openwindow(self):
-
-        #Define el objeto widget como una ventana principal
-        self.window = QtWidgets.QMainWindow()
-        #Define el objjeto ui , para regresar a la clase del script principal
-        self.ui = Ui_Page2()
-        #Manda un parametro a la ventana principal
-        self.ui.setupUi(self.window)
-        #Muestra la ventana 
-        self.window.show()
 
      #-------------------------------------------------- FUNCION Interfaz CONSULTA -----------------------------------------------------------#
 

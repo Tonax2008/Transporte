@@ -3,23 +3,9 @@ from PyQt5.QtWidgets import QTableWidget ,QTableWidgetItem,QErrorMessage, QMessa
 import cx_Oracle
 class Clientes(object):
 
-    #-------------------------------------------- Funcion MOVER entre Pantallas -----------------------------------------------------#
-
-    def openwindow(self):
-
-        #Define el objeto widget como una ventana principal
-        self.window = QtWidgets.QMainWindow()
-        #Define el objjeto ui , para regresar a la clase del script principal
-        self.ui = Ui_Page2()
-        #Manda un parametro a la ventana principal
-        self.ui.setupUi(self.window)
-        #Muestra la ventana 
-        self.window.show()
-
     #-------------------------------------------------- FUNCION Interfaz CONSULTA -----------------------------------------------------------#
 
     def setupUi(self, Form):
-
 
         #------------------------------------VENTANA PRINCIPAL------------------------------------------#
         #define una venata
@@ -29,9 +15,7 @@ class Clientes(object):
         #Nombre de la ventana 
         Form.setWindowTitle("CLIENTES")
 
-
         self.mensajes= QMessageBox()
-
 
         #------------------------------------TABLA CONTENODR BD------------------------------------------# 
         
@@ -53,48 +37,62 @@ class Clientes(object):
         self.tableWidget.setItem(0,3,QTableWidgetItem("Direccion"))
         
        #Conecta BD
-        conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
-        cursor=conecion.cursor()
 
+        try:
+           conecion = cx_Oracle.connect("TRANS/terreno4@localhost:1521/XEPDB1")
+           cursor=conecion.cursor()
 
-        consulta= ('select RAZ_SOC , RFC,CORREO ,PAG_WEB FROM CLIENTE JOIN CORREO USING (ID_COR)')
-        datos=cursor.execute(consulta).fetchall()
+        except Exception as err:
 
-        #Consutlta direccion 
-        adress=('SELECT CALLE , COLONIA,CP,DELEGACION,NO_INT,NO_EXT,ESTADO FROM CLIENTE JOIN DIRECCION USING(ID_DIR) JOIN ESTADO USING (ID_EST) ')
-        direccion= cursor.execute(adress).fetchall()
-        
-        #ciclo para recorrer tabla BD
-        if len (datos) >0:
-            fila =1
-            for p in datos:
-                columna=0
-                for c in p:
-                    celda=QTableWidgetItem(str(c))
-                    self.tableWidget.setItem(fila,columna,celda)
-                    columna +=1
-                fila +=1
-        
-        #Ciclo para rrecorer he imprimir dicrecciones BD
+            self.mensajes.setWindowTitle("HOLA ME VES SOY UN TITULO")
+            self.mensajes.setText("Coneccion No Lograda")
+            self.mensajes.setIcon(QMessageBox.Critical)
+            self.mensajes.exec_()
+            print(err)
 
-        if len (direccion) >0:
-            fila=1
+        else:
+            
+            try:
+                consulta= ('select RAZ_SOC , RFC,CORREO ,PAG_WEB FROM CLIENTE JOIN CORREO USING (ID_COR)')
+                datos=cursor.execute(consulta).fetchall()
 
-            for g in direccion:
+                #Consutlta direccion 
+                adress=('SELECT CALLE , COLONIA,CP,DELEGACION,NO_INT,NO_EXT,ESTADO FROM CLIENTE JOIN DIRECCION USING(ID_DIR) JOIN ESTADO USING (ID_EST) ')
+                direccion= cursor.execute(adress).fetchall()
                 
-
+                #ciclo para recorrer tabla BD
+                if len (datos) >0:
+                    fila =1
+                    for p in datos:
+                        columna=0
+                        for c in p:
+                            celda=QTableWidgetItem(str(c))
+                            self.tableWidget.setItem(fila,columna,celda)
+                            columna +=1
+                        fila +=1
                 
-                celda=QTableWidgetItem(str(g))
-                self.tableWidget.setItem(fila,3,celda)
-                    
-                fila +=1
-        
+                #Ciclo para rrecorer he imprimir dicrecciones BD
+
+                if len (direccion) >0:
+                    fila=1
+
+                    for g in direccion:
+                        
+                        celda=QTableWidgetItem(str(g))
+                        self.tableWidget.setItem(fila,3,celda)
+
+                        fila +=1
+            except Exception as err:
+                        
+                self.mensajes.setWindowTitle("HOLA ME VES SOY UN TITULO")
+                self.mensajes.setText("Consulta invalida", err)
+                self.mensajes.setIcon(QMessageBox.Critical)
+                self.mensajes.exec_()
+            
+            finally:
+                conecion.close()
+
        
-
-        #------------INSTERT-------------#
-
-
-
         #------------------------------------ BOTONES -----------------------------------------#
 
         #---Boton insertar---#
@@ -254,6 +252,7 @@ class Clientes(object):
         resultado_2=cursor.execute(busqueda_2).fetchall()
 
         #Convierte la tupla lista tomada de la BD a una lista
+
         #print(resultado_1)
         id_1=[x[0] for x in resultado_1]
         #print(metod)
@@ -265,20 +264,29 @@ class Clientes(object):
         t_id2=(id_2[0])
 
 
-       
+        if cadenavacia:
+            pass
 
-        if not self.exist_id(li_idcli):
-            
-            insert=("Insert into CLIENTE VALUES( {} ,'{}' ,'{}' ,'{}',{},{}) ".format(li_idcli,li_RazonSoc,li_RFC, li_pagweb,t_id1,t_id2))
-            print(insert)
+            if not self.exist_id(li_idcli):
+                
+                insert=("Insert into CLIENTE VALUES( {} ,'{}' ,'{}' ,'{}',{},{}) ".format(li_idcli,li_RazonSoc,li_RFC, li_pagweb,t_id1,t_id2))
+                print(insert)
 
+                
+                cursor.execute(insert)
+                conecion.commit()
             
-            cursor.execute(insert)
-            conecion.commit()
-        
+            else:
+                self.mensajes.setWindowTitle("HOLA ME VES SOY UN TITULO")
+                self.mensajes.setText("ID YA EXISTENTE")
+                self.mensajes.setIcon(QMessageBox.Warning)
+                self.mensajes.exec_()
         else:
-            self.mensajes.setText("EL ID YA EXISTE")
-            self.mensajes.execute
+                self.mensajes.setWindowTitle("HOLA ME VES SOY UN TITULO")
+                self.mensajes.setText("LLENA TODOS LOS CAMPOS ANTES DE INSERTAR")
+                self.mensajes.setIcon(QMessageBox.Warning)
+                self.mensajes.exec_()
+
     
     def update (self):
 
@@ -322,17 +330,22 @@ class Clientes(object):
 
         rows=self.tableWidget.selectionModel().selectedRows()
         index=[]
-
-        for i in rows:
-            index.append(i.row())
-        index.sort(reverse=True)
-        for i in index:
-            id_delate=self.tableWidget.item(i,0).text()
-            self.tableWidget.removeRow(i)
-            delate="DELETE FROM CLIENTE WHERE ID_CLI={}".format(id_delate)
-            cursor.execute(delate)
-            conecion.commit()
-        conecion.close()
+        if len(rows)>0:
+            for i in rows:
+                index.append(i.row())
+            index.sort(reverse=True)
+            for i in index:
+                id_delate=self.tableWidget.item(i,0).text()
+                self.tableWidget.removeRow(i)
+                delate="DELETE FROM CLIENTE WHERE ID_CLI={}".format(id_delate)
+                cursor.execute(delate)
+                conecion.commit()
+            conecion.close()
+        else:
+                self.mensajes.setWindowTitle("HOLA ME VES SOY UN TITULO")
+                self.mensajes.setText("SELECCIONE UNA FILA")
+                self.mensajes.setIcon(QMessageBox.Warning)
+                self.mensajes.exec_()
 
         
     def exist_id(self,num_id):
@@ -344,5 +357,17 @@ class Clientes(object):
         resultado=cursor.execute(verific).fetchall()
 
         return len(resultado) >0
+    
+    def cadenavacia (self,campo):
+        
+        li_idcli=self.lineEdit_C1.text().strip()
+        li_RazonSoc=self.lineEdit_C2.text().strip()
+        li_RFC=self.lineEdit_C3.text().strip()
+        li_pagweb=self.lineEdit_C4.text().strip()
+        li_idcor=self.lineEdit_C5.text().strip().lower()
+        li_iddir=self.lineEdit_C6.text().strip().lower()
+
+        
+    
  
 
